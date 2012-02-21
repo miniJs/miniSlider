@@ -4,6 +4,65 @@
 # Version: 1.0 alpha 1.0
 # Updated: June 27th, 2011
 #
+class Slide
+  constructor: (@slide, @options) ->
+
+  addCurrentClass: -> @slide.addClass @options.currentClass
+
+  addNextClass: -> @slide.addClass @options.nextClass
+
+  addPreviousClass: -> @slide.addClass @options.previousClass
+
+  removeCurrentClass: -> @slide.removeClass @options.currentClass
+
+  removeNextClass: -> @slide.removeClass @options.nextClass
+
+  removePreviousClass: -> @slide.removeClass @options.previousClass
+
+  cleanClasses: ->
+    @removeCurrentClass()
+    @removeNextClass()
+    @removePreviousClass()
+
+class Slider
+  constructor: (@container, @options) ->
+    @wrapper = @container.css('overflow', 'hidden')
+              .wrap("<div class=#{@options.containerClass} />")
+              .parent()
+
+    @slides = []
+    @container.children().each (index, element) =>  @slides.push(new Slide(($ element), @options))  
+
+    @slides[0].addCurrentClass()
+    @slides[1].addNextClass()
+    @slides[@itemsCount() - 1].addPreviousClass()
+              
+  run: ->
+    console.log 'run'
+              
+  appendNextPrev: ->
+    @wrapper.append(@previousElement())
+            .append(@nextElement())
+
+  appendPagination: ->
+    @wrapper.append(@pagination())
+
+  previousElement: ->
+    $('<a />', { html: 'previous', class: @options.previousClass, href: '#' })
+  
+  nextElement: ->
+    $('<a />', { html: 'next', class: @options.nextClass, href: '#' })
+
+  pagination: ->
+    pagination = $('<ul />', class: @options.paginationClass)
+    pagination.append("<li><a href='##{index + 1}'>#{index + 1}</li>") for slide, index in @slides
+    pagination
+
+  itemsCount: ->
+    @slides.length
+
+  slides: ->
+    @slides
 
 $ ->
   $.miniSlider = (element, options) ->
@@ -14,12 +73,12 @@ $ ->
       firstDelay:         2000                # delay before first transition
       delay:              1000                # delay between slides
       preloadImage:       ''                  # show preload images while loading 
-      containerClass:     'mini-slider'       # slider container class name
+      containerClass:     'slider-container'  # slider container class name
             
       # slides
-      currentSlideClass:  'current-slide'     # current slide class name
-      previousSlideClass: 'previous-slide'    # previous slide class name
-      nextSlideClass:     'next-slide'        # next slide class name
+      currentClass:       'current'     # current slide class name
+      previousClass:      'previous'    # previous slide class name
+      nextClass:          'next'        # next slide class name
 
       # transition
       effect:              'slide'            # 'slide' | 'fade'
@@ -29,7 +88,7 @@ $ ->
       # navigation
       pauseOnHover:        false              # pause slider when hovering slider
 
-      showNextPrev:        false              # show next/previous buttons
+      showNextPrev:        true               # show next/previous buttons
       previousClass:       'previous'         # previous button class
       nextClass:           'next'             # next button class
 
@@ -46,6 +105,8 @@ $ ->
     ## private variables
     # current state
     state = ''
+
+    slider = {}
 
     ## public variables
     # plugin settings
@@ -74,8 +135,15 @@ $ ->
 
     # init function
     @init = ->
+      setState 'loading'
+
       @settings = $.extend {}, @defaults, options
-    # end init method
+      slider = new Slider(@$element, @settings)
+      setState 'ready'
+
+      slider.appendNextPrev() if @getSetting 'showNextPrev'
+      slider.appendPagination() if @getSetting 'showPagination'
+      slider.run() if @getSetting 'autoPlay'
 
     # initialise the plugin
     @init()
