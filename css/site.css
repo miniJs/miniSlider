@@ -35,18 +35,18 @@ h1 strong {
 }
 
 
-.mini-slider {
+#slider {
     width: 960px;
     height: 300px;
 }
 
-.mini-slider div {
-    border: 20px solid #D5D5D5;
-    height: 260px;
+#slider div {
+    border: 10px solid #D5D5D5;
+    height: 280px;
     background-color: #0071D4;
 }
 
-.mini-slider div h2{
+#slider div h2{
     position: relative;
     top: 210px;
 }
