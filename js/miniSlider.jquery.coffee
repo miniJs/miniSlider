@@ -37,7 +37,9 @@ class Slider
     @slides[1].addNextClass()
     @slides[@itemsCount() - 1].addPreviousClass()
               
-  run: -> console.log 'run'
+  run: -> 
+    console.log 'run'
+    # TODO: add hover event
 
   next: -> console.log 'next'
   
@@ -48,17 +50,23 @@ class Slider
   appendNextPrev: ->
     @wrapper.append(@previousElement())
             .append(@nextElement())
+    # TODO: add click event
 
   appendPagination: ->
     @wrapper.append(@pagination())
+    # TODO: add click event
+
 
   previousElement: ->
+    # TODO: cache that element
     $('<a />', { html: 'previous', class: @options.previousClass, href: '#' })
   
   nextElement: ->
+    # TODO: cache that element
     $('<a />', { html: 'next', class: @options.nextClass, href: '#' })
 
   pagination: ->
+    # TODO: cache that element
     pagination = $('<ul />', class: @options.paginationClass)
     pagination.append("<li><a href='##{index + 1}'>#{index + 1}</li>") for slide, index in @slides
     pagination
