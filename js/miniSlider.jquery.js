@@ -47,6 +47,15 @@
     Slider.prototype.run = function() {
       return console.log('run');
     };
+    Slider.prototype.next = function() {
+      return console.log('next');
+    };
+    Slider.prototype.previous = function() {
+      return console.log('previous');
+    };
+    Slider.prototype.go = function(number) {
+      return console.log("go to " + number);
+    };
     Slider.prototype.appendNextPrev = function() {
       return this.wrapper.append(this.previousElement()).append(this.nextElement());
     };

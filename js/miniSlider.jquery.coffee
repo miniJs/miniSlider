@@ -2,7 +2,7 @@
 # CoffeeScript jQuery Plugin Boilerplate
 # By: Matthieu Aussaguel, http://www.mynameismatthieu.com, @matthieu_tweets
 # Version: 1.0 alpha 1.0
-# Updated: June 27th, 2011
+# Updated: February 21, 2012
 #
 class Slide
   constructor: (@slide, @options) ->
@@ -37,8 +37,13 @@ class Slider
     @slides[1].addNextClass()
     @slides[@itemsCount() - 1].addPreviousClass()
               
-  run: ->
-    console.log 'run'
+  run: -> console.log 'run'
+
+  next: -> console.log 'next'
+  
+  previous: -> console.log 'previous'
+
+  go: (number) -> console.log "go to #{number}"
               
   appendNextPrev: ->
     @wrapper.append(@previousElement())
