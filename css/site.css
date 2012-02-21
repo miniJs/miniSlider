@@ -12,6 +12,18 @@ h1 {
     border-bottom: 1px solid #3c3c3c;
 }
 
+h2 {
+    padding-left: 20px;
+    color: #D5D5D5;
+    font-size: 22px;
+    margin: 0;
+    border-top: 1px solid #979797;
+    border-bottom: 0;
+    line-height: 44px;
+    font-weight: 100;
+    letter-spacing: 3px;
+}
+
 h1 strong {
     text-transform: uppercase;
     font-weight: bold;
@@ -20,5 +32,22 @@ h1 strong {
 #main {
     width: 980px;
     margin:  0 auto;
+}
+
+
+.mini-slider {
+    width: 960px;
+    height: 300px;
+}
+
+.mini-slider div {
+    border: 20px solid #D5D5D5;
+    height: 260px;
+    background-color: #0071D4;
+}
+
+.mini-slider div h2{
+    position: relative;
+    top: 210px;
 }
 
