@@ -47,7 +47,14 @@
     function Slider(container, options) {
       this.container = container;
       this.options = options;
-      this.wrapper = this.container.css('overflow', 'hidden').wrap("<div class=" + this.options.containerClass + " />").parent();
+      this.wrapper = this.container.css({
+        overflow: 'hidden'
+      }).wrap("<div class=" + this.options.containerClass + " />").parent();
+      this.wrapper.css({
+        height: this.container.height(),
+        width: this.container.width(),
+        position: 'relative'
+      });
       this.initSlides();
     }
 
@@ -81,7 +88,7 @@
       return console.log('resume');
     };
 
-    Slider.prototype.appendNextPrev = function() {
+    Slider.prototype.appendNavigation = function() {
       var _this = this;
       this.wrapper.append(this.previousElement()).append(this.nextElement());
       this.nextElement().on('click', function() {
@@ -97,6 +104,7 @@
     Slider.prototype.appendPagination = function() {
       var _this = this;
       this.wrapper.append(this.pagination());
+      this.pagination().find("li:eq(" + this.currentIndex + ")").addClass(this.options.currentPaginationClass);
       return this.pagination().on('click', 'a', function(e) {
         _this.go(($(e.currentTarget)).attr('href').replace('#', ''));
         return false;
@@ -105,16 +113,16 @@
 
     Slider.prototype.previousElement = function() {
       return this.$previousElement || (this.$previousElement = $('<a />', {
-        html: 'previous',
-        "class": this.options.previousClass,
+        html: this.options.previousBtnContent,
+        "class": this.options.previousBtnClass,
         href: '#'
       }));
     };
 
     Slider.prototype.nextElement = function() {
       return this.$nextElement || (this.$nextElement = $('<a />', {
-        html: 'next',
-        "class": this.options.nextClass,
+        html: this.options.nextBtnContent,
+        "class": this.options.nextBtnClass,
         href: '#'
       }));
     };
@@ -180,11 +188,14 @@
         transitionSpeed: 500,
         transitionEasing: 'swing',
         pauseOnHover: false,
-        showNextPrev: true,
-        previousClass: 'previous',
-        nextClass: 'next',
+        showNavigation: true,
+        previousBtnClass: 'previousBtn',
+        nextBtnClass: 'nextBtn',
+        previousBtnContent: '&lsaquo;',
+        nextBtnContent: '&rsaquo;',
         showPagination: true,
         paginationClass: 'pagination',
+        currentPaginationClass: 'currentPagination',
         onLoad: function() {},
         onReady: function() {},
         onTransition: function() {},
@@ -211,7 +222,7 @@
         this.settings = $.extend({}, this.defaults, options);
         slider = new Slider(this.$element, this.settings);
         setState('ready');
-        if (this.getSetting('showNextPrev')) slider.appendNextPrev();
+        if (this.getSetting('showNavigation')) slider.appendNavigation();
         if (this.getSetting('showPagination')) slider.appendPagination();
         if (this.getSetting('autoPlay')) return slider.run();
       };

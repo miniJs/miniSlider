@@ -26,9 +26,12 @@ class Slide
 
 class Slider
   constructor: (@container, @options) ->
-    @wrapper = @container.css('overflow', 'hidden')
+    @wrapper = @container.css({ overflow: 'hidden' })
               .wrap("<div class=#{@options.containerClass} />")
               .parent()
+              
+    @wrapper.css(height: @container.height(), width: @container.width(), position: 'relative')
+    
 
     @initSlides()
               
@@ -40,7 +43,6 @@ class Slider
       ).on('mouseleave', =>
         @resume()
       )
-    
 
   next: -> console.log 'next'
   
@@ -52,7 +54,7 @@ class Slider
 
   resume: -> console.log 'resume'
               
-  appendNextPrev: ->
+  appendNavigation: ->
     @wrapper.append(@previousElement())
             .append(@nextElement())
 
@@ -67,15 +69,18 @@ class Slider
   appendPagination: ->
     @wrapper.append(@pagination())
 
+    @pagination().find("li:eq(#{@currentIndex})")
+                 .addClass(@options.currentPaginationClass)
+
     @pagination().on 'click', 'a', (e) =>
       @go ($ e.currentTarget).attr('href').replace('#','')
       return false
 
   previousElement: ->
-    @$previousElement ||= $('<a />', { html: 'previous', class: @options.previousClass, href: '#' })
+    @$previousElement ||= $('<a />', { html: @options.previousBtnContent, class: @options.previousBtnClass, href: '#' })
   
   nextElement: ->
-    @$nextElement ||= $('<a />', { html: 'next', class: @options.nextClass, href: '#' })
+    @$nextElement ||= $('<a />', { html: @options.nextBtnContent, class: @options.nextBtnClass, href: '#' })
 
   pagination: ->
     unless @$pagination
@@ -108,31 +113,34 @@ $ ->
     # default plugin settings
     @defaults = {
       # general
-      autoPlay:           true                # autoplay slides
-      firstDelay:         2000                # delay before first transition
-      delay:              1000                # delay between slides
-      preloadImage:       ''                  # show preload images while loading 
-      containerClass:     'slider-container'  # slider container class name
+      autoPlay:              true                # autoplay slides
+      firstDelay:            2000                # delay before first transition
+      delay:                 1000                # delay between slides
+      preloadImage:          ''                  # show preload images while loading 
+      containerClass:        'slider-container'  # slider container class name
             
       # slides
-      currentClass:       'current'     # current slide class name
-      previousClass:      'previous'    # previous slide class name
-      nextClass:          'next'        # next slide class name
+      currentClass:          'current'            # current slide class name
+      previousClass:         'previous'           # previous slide class name
+      nextClass:             'next'               # next slide class name
 
       # transition
-      effect:              'slide'            # 'slide' | 'fade'
-      transitionSpeed:     500                # transition speed between slides
-      transitionEasing:    'swing'            # easing animation for the slides transition
+      effect:                 'slide'            # 'slide' | 'fade'
+      transitionSpeed:        500                # transition speed between slides
+      transitionEasing:       'swing'            # easing animation for the slides transition
 
       # navigation
-      pauseOnHover:        false              # pause slider when hovering slider
+      pauseOnHover:           false              # pause slider when hovering slider
 
-      showNextPrev:        true               # show next/previous buttons
-      previousClass:       'previous'         # previous button class
-      nextClass:           'next'             # next button class
+      showNavigation:         true                # show next/previous buttons
+      previousBtnClass:      'previousBtn'        # previous button class
+      nextBtnClass:          'nextBtn'            # next button class
+      previousBtnContent:     '&lsaquo;'          # previous button html content
+      nextBtnContent:        '&rsaquo;'           # next button html content
 
-      showPagination:      true               # show slider pagination
-      paginationClass:     'pagination'       # pagination wrapper class
+      showPagination:         true                # show slider pagination
+      paginationClass:        'pagination'        # pagination wrapper class
+      currentPaginationClass: 'currentPagination' # current pagination list item class
 
       # callbacks
       onLoad:               ->                # Function(), called when miniSlide is loading
@@ -180,7 +188,7 @@ $ ->
       slider = new Slider(@$element, @settings)
       setState 'ready'
 
-      slider.appendNextPrev() if @getSetting 'showNextPrev'
+      slider.appendNavigation() if @getSetting 'showNavigation'
       slider.appendPagination() if @getSetting 'showPagination'
       slider.run() if @getSetting 'autoPlay'
 
