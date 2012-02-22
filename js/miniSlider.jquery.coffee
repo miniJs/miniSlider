@@ -48,7 +48,7 @@ class Slider
   
   previous: -> console.log 'previous'
 
-  go: (number) -> console.log "go to slide #{number}"
+  to: (number) -> console.log "go to slide #{number}"
 
   pause: -> console.log 'pause'
 
@@ -73,7 +73,7 @@ class Slider
                  .addClass(@options.currentPaginationClass)
 
     @pagination().on 'click', 'a', (e) =>
-      @go ($ e.currentTarget).attr('href').replace('#','')
+      @to ($ e.currentTarget).attr('href').replace('#','')
       return false
 
   previousElement: ->

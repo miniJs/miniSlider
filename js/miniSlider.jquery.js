@@ -76,7 +76,7 @@
       return console.log('previous');
     };
 
-    Slider.prototype.go = function(number) {
+    Slider.prototype.to = function(number) {
       return console.log("go to slide " + number);
     };
 
@@ -106,7 +106,7 @@
       this.wrapper.append(this.pagination());
       this.pagination().find("li:eq(" + this.currentIndex + ")").addClass(this.options.currentPaginationClass);
       return this.pagination().on('click', 'a', function(e) {
-        _this.go(($(e.currentTarget)).attr('href').replace('#', ''));
+        _this.to(($(e.currentTarget)).attr('href').replace('#', ''));
         return false;
       });
     };
