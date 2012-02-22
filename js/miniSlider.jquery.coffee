@@ -5,19 +5,19 @@
 # Updated: February 21, 2012
 #
 class Slide
-  constructor: (@slide, @options) ->
+  constructor: (@element, @options) ->
 
-  addCurrentClass: -> @slide.addClass @options.currentClass
+  addCurrentClass:      -> @element.addClass @options.currentClass
 
-  addNextClass: -> @slide.addClass @options.nextClass
+  addNextClass:         -> @element.addClass @options.nextClass
 
-  addPreviousClass: -> @slide.addClass @options.previousClass
+  addPreviousClass:     -> @element.addClass @options.previousClass
 
-  removeCurrentClass: -> @slide.removeClass @options.currentClass
+  removeCurrentClass:   -> @element.removeClass @options.currentClass
 
-  removeNextClass: -> @slide.removeClass @options.nextClass
+  removeNextClass:      -> @element.removeClass @options.nextClass
 
-  removePreviousClass: -> @slide.removeClass @options.previousClass
+  removePreviousClass:  -> @element.removeClass @options.previousClass
 
   cleanClasses: ->
     @removeCurrentClass()
@@ -30,52 +30,78 @@ class Slider
               .wrap("<div class=#{@options.containerClass} />")
               .parent()
 
-    @slides = []
-    @container.children().each (index, element) =>  @slides.push(new Slide(($ element), @options))  
-
-    @slides[0].addCurrentClass()
-    @slides[1].addNextClass()
-    @slides[@itemsCount() - 1].addPreviousClass()
+    @initSlides()
               
   run: -> 
     console.log 'run'
-    # TODO: add hover event
+    @container.children()
+      .on('mouseenter', =>
+        @pause()
+      ).on('mouseleave', =>
+        @resume()
+      )
+    
 
   next: -> console.log 'next'
   
   previous: -> console.log 'previous'
 
-  go: (number) -> console.log "go to #{number}"
+  go: (number) -> console.log "go to slide #{number}"
+
+  pause: -> console.log 'pause'
+
+  resume: -> console.log 'resume'
               
   appendNextPrev: ->
     @wrapper.append(@previousElement())
             .append(@nextElement())
-    # TODO: add click event
+
+    @nextElement().on 'click', =>
+      @next()
+      return false
+
+    @previousElement().on 'click', =>
+      @previous()
+      return false
 
   appendPagination: ->
     @wrapper.append(@pagination())
-    # TODO: add click event
 
+    @pagination().on 'click', 'a', (e) =>
+      @go ($ e.currentTarget).attr('href').replace('#','')
+      return false
 
   previousElement: ->
-    # TODO: cache that element
-    $('<a />', { html: 'previous', class: @options.previousClass, href: '#' })
+    @$previousElement ||= $('<a />', { html: 'previous', class: @options.previousClass, href: '#' })
   
   nextElement: ->
-    # TODO: cache that element
-    $('<a />', { html: 'next', class: @options.nextClass, href: '#' })
+    @$nextElement ||= $('<a />', { html: 'next', class: @options.nextClass, href: '#' })
 
   pagination: ->
-    # TODO: cache that element
-    pagination = $('<ul />', class: @options.paginationClass)
-    pagination.append("<li><a href='##{index + 1}'>#{index + 1}</li>") for slide, index in @slides
-    pagination
+    unless @$pagination
+      @$pagination = $('<ul />', class: @options.paginationClass)
+      @$pagination.append("<li><a href='##{index + 1}'>#{index + 1}</li>") for slide, index in @slides
+    @$pagination
 
   itemsCount: ->
     @slides.length
 
   slides: ->
     @slides
+
+  initSlides: ->
+    @slides = []
+    @container.children().each (index, element) =>  @slides.push(new Slide(($ element), @options))  
+    @initTracker()
+
+  initTracker: ->
+    @currentIndex  = 0
+    @nextIndex     = 1
+    @previousIndex = @itemsCount() - 1
+
+    @slides[@currentIndex].addCurrentClass()
+    @slides[@nextIndex].addNextClass()
+    @slides[@previousIndex].addPreviousClass()
 
 $ ->
   $.miniSlider = (element, options) ->
