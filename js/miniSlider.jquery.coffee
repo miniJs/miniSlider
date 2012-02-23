@@ -5,64 +5,29 @@
 # Updated: February 21, 2012
 #
 class Slide
-  constructor: (@element, @options) ->
-
-  addCurrentClass:      -> @element.addClass @options.currentClass
-
-  addNextClass:         -> @element.addClass @options.nextClass
-
-  addPreviousClass:     -> @element.addClass @options.previousClass
-
-  removeCurrentClass:   -> @element.removeClass @options.currentClass
-
-  removeNextClass:      -> @element.removeClass @options.nextClass
-
-  removePreviousClass:  -> @element.removeClass @options.previousClass
-
-  cleanClasses: ->
-    @removeCurrentClass()
-    @removeNextClass()
-    @removePreviousClass()
+  constructor: (@element, @index, @options) ->
+    @element.css({ position: 'absolute', top: 0, left: @index * @element.width() })
 
 class Slider
   constructor: (@container, @options) ->
-    @wrapper = @container.css({ overflow: 'hidden' })
-              .wrap("<div class=#{@options.containerClass} />")
-              .parent()
-              
-    @wrapper.css(height: @container.height(), width: @container.width(), position: 'relative')
-    
+    @size = { height: @container.height(), width: @container.width() }
 
+    @container.css({ overflow: 'hidden', position: 'absolute', top: 0, left: 0 })
+              .wrap("<div class='#{@options.containerClass}' style='position: relative; overflow: hidden;'/>")
+    @wrapper = @container.parent()
     @initSlides()
-              
-  run: -> 
-    console.log 'run'
-    @container.children()
-      .on('mouseenter', =>
-        @pause()
-      ).on('mouseleave', =>
-        @resume()
-      )
-
-  next: -> console.log 'next'
-  
-  previous: -> console.log 'previous'
-
-  to: (number) -> console.log "go to slide #{number}"
-
-  pause: -> console.log 'pause'
-
-  resume: -> console.log 'resume'
+    @container.css('width', @size.width * @slides.length)
+    @initTracker()              
               
   appendNavigation: ->
-    @wrapper.append(@previousElement())
-            .append(@nextElement())
+    @wrapper.append(@previousLink())
+            .append(@nextLink())
 
-    @nextElement().on 'click', =>
+    @nextLink().on 'click', =>
       @next()
       return false
 
-    @previousElement().on 'click', =>
+    @previousLink().on 'click', =>
       @previous()
       return false
 
@@ -76,11 +41,11 @@ class Slider
       @to ($ e.currentTarget).attr('href').replace('#','')
       return false
 
-  previousElement: ->
-    @$previousElement ||= $('<a />', { html: @options.previousBtnContent, class: @options.previousBtnClass, href: '#' })
+  previousLink: ->
+    @$previousLink ||= $('<a />', { html: @options.previousBtnContent, class: @options.previousBtnClass, href: '#' })
   
-  nextElement: ->
-    @$nextElement ||= $('<a />', { html: @options.nextBtnContent, class: @options.nextBtnClass, href: '#' })
+  nextLink: ->
+    @$nextLink ||= $('<a />', { html: @options.nextBtnContent, class: @options.nextBtnClass, href: '#' })
 
   pagination: ->
     unless @$pagination
@@ -91,22 +56,48 @@ class Slider
   itemsCount: ->
     @slides.length
 
-  slides: ->
-    @slides
-
   initSlides: ->
     @slides = []
-    @container.children().each (index, element) =>  @slides.push(new Slide(($ element), @options))  
-    @initTracker()
+    @container.children().each (index, element) =>  @slides.push(new Slide(($ element), index, @options))  
 
   initTracker: ->
     @currentIndex  = 0
-    @nextIndex     = 1
-    @previousIndex = @itemsCount() - 1
 
-    @slides[@currentIndex].addCurrentClass()
-    @slides[@nextIndex].addNextClass()
-    @slides[@previousIndex].addPreviousClass()
+  currentSlide: ->
+    @slides[@currentIndex]
+
+  nextSlide: ->
+    @slides[@nextIndex]
+
+  previousSlide: ->
+    @slides[@previousIndex]
+
+  play: -> 
+    animation = setInterval =>
+      @next()
+    , @options.delay
+
+    if @options.pauseOnHover
+      @container.children()
+        .on('mouseenter', =>
+          @pause()
+        ).on('mouseleave', =>
+          @resume()
+        )
+
+  next: -> 
+    @container.animate({ left: (@container.position().left - @size.width) }, @options.transitionSpeed, @options.transitionEasing)
+  
+  previous: -> 
+    @container.animate({ left: (@container.position().left + @size.width) }, @options.transitionSpeed, @options.transitionEasing)
+
+  to: (number) -> console.log "go to slide #{number}"
+
+  pause: ->
+
+  resume: ->
+    
+
 
 $ ->
   $.miniSlider = (element, options) ->
@@ -114,8 +105,8 @@ $ ->
     @defaults = {
       # general
       autoPlay:              true                # autoplay slides
-      firstDelay:            2000                # delay before first transition
-      delay:                 1000                # delay between slides
+      firstDelay:            5000                # delay before first transition
+      delay:                 3000                # delay between slides
       preloadImage:          ''                  # show preload images while loading 
       containerClass:        'slider-container'  # slider container class name
             
@@ -125,17 +116,16 @@ $ ->
       nextClass:             'next'               # next slide class name
 
       # transition
-      effect:                 'slide'            # 'slide' | 'fade'
       transitionSpeed:        500                # transition speed between slides
       transitionEasing:       'swing'            # easing animation for the slides transition
 
       # navigation
-      pauseOnHover:           false              # pause slider when hovering slider
+      pauseOnHover:           false               # pause on mouse over
 
       showNavigation:         true                # show next/previous buttons
       previousBtnClass:      'previousBtn'        # previous button class
       nextBtnClass:          'nextBtn'            # next button class
-      previousBtnContent:     '&lsaquo;'          # previous button html content
+      previousBtnContent:    '&lsaquo;'           # previous button html content
       nextBtnContent:        '&rsaquo;'           # next button html content
 
       showPagination:         true                # show slider pagination
@@ -150,8 +140,6 @@ $ ->
     }
 
     ## private variables
-    # current state
-    state = ''
 
     slider = {}
 
@@ -163,14 +151,8 @@ $ ->
     @$element = $ element
 
     ## private methods
-    # set current state
-    setState = (_state) ->
-      state = _state
 
     ## public methods
-    #get current state
-    @getState = ->
-      state
 
     # get particular plugin setting
     @getSetting = (settingKey) ->
@@ -182,15 +164,12 @@ $ ->
 
     # init function
     @init = ->
-      setState 'loading'
-
       @settings = $.extend {}, @defaults, options
       slider = new Slider(@$element, @settings)
-      setState 'ready'
 
       slider.appendNavigation() if @getSetting 'showNavigation'
       slider.appendPagination() if @getSetting 'showPagination'
-      slider.run() if @getSetting 'autoPlay'
+      slider.play() if @getSetting 'autoPlay'
 
     # initialise the plugin
     @init()

@@ -3,40 +3,16 @@
 
   Slide = (function() {
 
-    function Slide(element, options) {
+    function Slide(element, index, options) {
       this.element = element;
+      this.index = index;
       this.options = options;
+      this.element.css({
+        position: 'absolute',
+        top: 0,
+        left: this.index * this.element.width()
+      });
     }
-
-    Slide.prototype.addCurrentClass = function() {
-      return this.element.addClass(this.options.currentClass);
-    };
-
-    Slide.prototype.addNextClass = function() {
-      return this.element.addClass(this.options.nextClass);
-    };
-
-    Slide.prototype.addPreviousClass = function() {
-      return this.element.addClass(this.options.previousClass);
-    };
-
-    Slide.prototype.removeCurrentClass = function() {
-      return this.element.removeClass(this.options.currentClass);
-    };
-
-    Slide.prototype.removeNextClass = function() {
-      return this.element.removeClass(this.options.nextClass);
-    };
-
-    Slide.prototype.removePreviousClass = function() {
-      return this.element.removeClass(this.options.previousClass);
-    };
-
-    Slide.prototype.cleanClasses = function() {
-      this.removeCurrentClass();
-      this.removeNextClass();
-      return this.removePreviousClass();
-    };
 
     return Slide;
 
@@ -47,55 +23,30 @@
     function Slider(container, options) {
       this.container = container;
       this.options = options;
-      this.wrapper = this.container.css({
-        overflow: 'hidden'
-      }).wrap("<div class=" + this.options.containerClass + " />").parent();
-      this.wrapper.css({
+      this.size = {
         height: this.container.height(),
-        width: this.container.width(),
-        position: 'relative'
-      });
+        width: this.container.width()
+      };
+      this.container.css({
+        overflow: 'hidden',
+        position: 'absolute',
+        top: 0,
+        left: 0
+      }).wrap("<div class='" + this.options.containerClass + "' style='position: relative; overflow: hidden;'/>");
+      this.wrapper = this.container.parent();
       this.initSlides();
+      this.container.css('width', this.size.width * this.slides.length);
+      this.initTracker();
     }
-
-    Slider.prototype.run = function() {
-      var _this = this;
-      console.log('run');
-      return this.container.children().on('mouseenter', function() {
-        return _this.pause();
-      }).on('mouseleave', function() {
-        return _this.resume();
-      });
-    };
-
-    Slider.prototype.next = function() {
-      return console.log('next');
-    };
-
-    Slider.prototype.previous = function() {
-      return console.log('previous');
-    };
-
-    Slider.prototype.to = function(number) {
-      return console.log("go to slide " + number);
-    };
-
-    Slider.prototype.pause = function() {
-      return console.log('pause');
-    };
-
-    Slider.prototype.resume = function() {
-      return console.log('resume');
-    };
 
     Slider.prototype.appendNavigation = function() {
       var _this = this;
-      this.wrapper.append(this.previousElement()).append(this.nextElement());
-      this.nextElement().on('click', function() {
+      this.wrapper.append(this.previousLink()).append(this.nextLink());
+      this.nextLink().on('click', function() {
         _this.next();
         return false;
       });
-      return this.previousElement().on('click', function() {
+      return this.previousLink().on('click', function() {
         _this.previous();
         return false;
       });
@@ -111,16 +62,16 @@
       });
     };
 
-    Slider.prototype.previousElement = function() {
-      return this.$previousElement || (this.$previousElement = $('<a />', {
+    Slider.prototype.previousLink = function() {
+      return this.$previousLink || (this.$previousLink = $('<a />', {
         html: this.options.previousBtnContent,
         "class": this.options.previousBtnClass,
         href: '#'
       }));
     };
 
-    Slider.prototype.nextElement = function() {
-      return this.$nextElement || (this.$nextElement = $('<a />', {
+    Slider.prototype.nextLink = function() {
+      return this.$nextLink || (this.$nextLink = $('<a />', {
         html: this.options.nextBtnContent,
         "class": this.options.nextBtnClass,
         href: '#'
@@ -146,27 +97,64 @@
       return this.slides.length;
     };
 
-    Slider.prototype.slides = function() {
-      return this.slides;
-    };
-
     Slider.prototype.initSlides = function() {
       var _this = this;
       this.slides = [];
-      this.container.children().each(function(index, element) {
-        return _this.slides.push(new Slide($(element), _this.options));
+      return this.container.children().each(function(index, element) {
+        return _this.slides.push(new Slide($(element), index, _this.options));
       });
-      return this.initTracker();
     };
 
     Slider.prototype.initTracker = function() {
-      this.currentIndex = 0;
-      this.nextIndex = 1;
-      this.previousIndex = this.itemsCount() - 1;
-      this.slides[this.currentIndex].addCurrentClass();
-      this.slides[this.nextIndex].addNextClass();
-      return this.slides[this.previousIndex].addPreviousClass();
+      return this.currentIndex = 0;
     };
+
+    Slider.prototype.currentSlide = function() {
+      return this.slides[this.currentIndex];
+    };
+
+    Slider.prototype.nextSlide = function() {
+      return this.slides[this.nextIndex];
+    };
+
+    Slider.prototype.previousSlide = function() {
+      return this.slides[this.previousIndex];
+    };
+
+    Slider.prototype.play = function() {
+      var animation,
+        _this = this;
+      animation = setInterval(function() {
+        return _this.next();
+      }, this.options.delay);
+      if (this.options.pauseOnHover) {
+        return this.container.children().on('mouseenter', function() {
+          return _this.pause();
+        }).on('mouseleave', function() {
+          return _this.resume();
+        });
+      }
+    };
+
+    Slider.prototype.next = function() {
+      return this.container.animate({
+        left: this.container.position().left - this.size.width
+      }, this.options.transitionSpeed, this.options.transitionEasing);
+    };
+
+    Slider.prototype.previous = function() {
+      return this.container.animate({
+        left: this.container.position().left + this.size.width
+      }, this.options.transitionSpeed, this.options.transitionEasing);
+    };
+
+    Slider.prototype.to = function(number) {
+      return console.log("go to slide " + number);
+    };
+
+    Slider.prototype.pause = function() {};
+
+    Slider.prototype.resume = function() {};
 
     return Slider;
 
@@ -174,17 +162,16 @@
 
   $(function() {
     $.miniSlider = function(element, options) {
-      var setState, slider, state;
+      var slider;
       this.defaults = {
         autoPlay: true,
-        firstDelay: 2000,
-        delay: 1000,
+        firstDelay: 5000,
+        delay: 3000,
         preloadImage: '',
         containerClass: 'slider-container',
         currentClass: 'current',
         previousClass: 'previous',
         nextClass: 'next',
-        effect: 'slide',
         transitionSpeed: 500,
         transitionEasing: 'swing',
         pauseOnHover: false,
@@ -201,16 +188,9 @@
         onTransition: function() {},
         onComplete: function() {}
       };
-      state = '';
       slider = {};
       this.settings = {};
       this.$element = $(element);
-      setState = function(_state) {
-        return state = _state;
-      };
-      this.getState = function() {
-        return state;
-      };
       this.getSetting = function(settingKey) {
         return this.settings[settingKey];
       };
@@ -218,13 +198,11 @@
         return this.settings[functionName]();
       };
       this.init = function() {
-        setState('loading');
         this.settings = $.extend({}, this.defaults, options);
         slider = new Slider(this.$element, this.settings);
-        setState('ready');
         if (this.getSetting('showNavigation')) slider.appendNavigation();
         if (this.getSetting('showPagination')) slider.appendPagination();
-        if (this.getSetting('autoPlay')) return slider.run();
+        if (this.getSetting('autoPlay')) return slider.play();
       };
       return this.init();
     };

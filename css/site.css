@@ -30,31 +30,33 @@ h1 strong {
 
 /* SLIDER */
 
-#slider {
-    width: 960px;
+#main-inner {
+    overflow: hidden;
     height: 300px;
+    width: 960px;
+}
+
+#slider {
+    height: 300px;
+    width: 960px;
 }
 
 #slider figure {
-    border: 1px solid #222;
     height: 298px;
-    background-color: #0071D4;
-    position: relative;
+    width: 960px;
     margin: 0;
+    position: relative;
 }
 
 #slider img {
     left: 0;
     top: 0;
-    position: absolute;
-    
-    
 }
 
 #slider figcaption {
     position: absolute;
     bottom: 0;
-    width: 948px;
+    width: 938px;
     padding-left: 20px;
     color: #D5D5D5;
     margin: 0;
@@ -77,13 +79,21 @@ h1 strong {
 }
 
 #slider figcaption p {
-    font-size: 14px;
-    line-height: 12px;
+    font-size: 13px;
+    line-height: 6px;
+    letter-spacing: 1px;
 }
 
 
 
 /* SLIDER CONTAINER */
+
+.slider-container {
+    border: 1px solid #222;
+    width: 958px;
+    height: 298px;
+    overflow: hidden;
+}
 
 .slider-container a, .slider-container a:hover, .slider-container a:active {
     text-decoration: none;
@@ -115,11 +125,11 @@ h1 strong {
 }
 
 .slider-container .previousBtn {
-    left: -22px;
+    left: 10px;
 }
 
 .slider-container .nextBtn {
-    right: -22px;
+    right: 10px;
 }
 
 
