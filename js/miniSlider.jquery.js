@@ -148,9 +148,7 @@
       }, this.options.transitionSpeed, this.options.transitionEasing);
     };
 
-    Slider.prototype.to = function(number) {
-      return console.log("go to slide " + number);
-    };
+    Slider.prototype.to = function(number) {};
 
     Slider.prototype.pause = function() {};
 
@@ -167,7 +165,6 @@
         autoPlay: true,
         firstDelay: 5000,
         delay: 3000,
-        preloadImage: '',
         containerClass: 'slider-container',
         currentClass: 'current',
         previousClass: 'previous',

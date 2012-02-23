@@ -73,6 +73,8 @@ class Slider
     @slides[@previousIndex]
 
   play: -> 
+    # TODO: handle first delay if specified
+
     animation = setInterval =>
       @next()
     , @options.delay
@@ -86,16 +88,27 @@ class Slider
         )
 
   next: -> 
+    # TODO: update the state while animating and after animation
+    # Check wether it's the last slide or not and change the behavior is so
+    # Update the current index
+    # Call callback method onTransition and onComplete
     @container.animate({ left: (@container.position().left - @size.width) }, @options.transitionSpeed, @options.transitionEasing)
   
   previous: -> 
+    # TODO: update the state while animating and after animation
+    # Check wether it's the first slide or not and change the behavior is so
+    # Update the current index
+    # Call callback method onTransition and onComplete
     @container.animate({ left: (@container.position().left + @size.width) }, @options.transitionSpeed, @options.transitionEasing)
 
-  to: (number) -> console.log "go to slide #{number}"
+  to: (number) -> 
+    # TODO: go to slide #number and update the index
 
   pause: ->
+    # TODO: pause the autoplaying and update the state
 
   resume: ->
+    # TODO: resume the autoplaying and update the state
     
 
 
@@ -107,7 +120,6 @@ $ ->
       autoPlay:              true                # autoplay slides
       firstDelay:            5000                # delay before first transition
       delay:                 3000                # delay between slides
-      preloadImage:          ''                  # show preload images while loading 
       containerClass:        'slider-container'  # slider container class name
             
       # slides
@@ -164,11 +176,13 @@ $ ->
 
     # init function
     @init = ->
+      # call onLoad callback method
       @settings = $.extend {}, @defaults, options
       slider = new Slider(@$element, @settings)
 
       slider.appendNavigation() if @getSetting 'showNavigation'
       slider.appendPagination() if @getSetting 'showPagination'
+      # call onReady callback method
       slider.play() if @getSetting 'autoPlay'
 
     # initialise the plugin
