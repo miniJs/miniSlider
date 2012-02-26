@@ -31,6 +31,7 @@ Developed by <a href="mailto:matthieu.aussaguel@gmail">Matthieu Aussaguel</a>, <
 * Browser compatibility testing
 * Other transition effects such as fade
 * Preload image setting
+* Make the slider design responsive friendly
 * Add test coverage using jasmine.js
 
 ### Licence
