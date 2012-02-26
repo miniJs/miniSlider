@@ -94,6 +94,10 @@
       return this.$pagination;
     };
 
+    Slider.prototype.currentPaginationElement = function() {
+      return this.pagination().find("li:eq(" + this.currentIndex + ")");
+    };
+
     Slider.prototype.count = function() {
       return this.slides.length;
     };
@@ -106,6 +110,18 @@
       });
       this.container.css('width', this.size.width * this.slides.length);
       return this.initTracker();
+    };
+
+    Slider.prototype.currentSlideElement = function() {
+      return this.slides[this.currentIndex].element;
+    };
+
+    Slider.prototype.previousSlideElement = function() {
+      return this.slides[this.previousIndex].element;
+    };
+
+    Slider.prototype.nextSlideElement = function() {
+      return this.slides[this.nextIndex].element;
     };
 
     Slider.prototype.initTracker = function() {
@@ -124,17 +140,17 @@
     };
 
     Slider.prototype.addCssClasses = function() {
-      this.slides[this.currentIndex].element.addClass(this.options.currentClass);
-      this.slides[this.previousIndex].element.addClass(this.options.previousClass);
-      this.slides[this.nextIndex].element.addClass(this.options.nextClass);
-      return this.pagination().find("li:eq(" + this.currentIndex + ")").addClass(this.options.currentPaginationClass);
+      this.currentSlideElement().addClass(this.options.currentClass);
+      this.previousSlideElement().addClass(this.options.previousClass);
+      this.nextSlideElement().addClass(this.options.nextClass);
+      return this.currentPaginationElement().addClass(this.options.currentPaginationClass);
     };
 
     Slider.prototype.removeCssClasses = function() {
-      this.slides[this.currentIndex].element.removeClass(this.options.currentClass);
-      this.slides[this.previousIndex].element.removeClass(this.options.previousClass);
-      this.slides[this.nextIndex].element.removeClass(this.options.nextClass);
-      return this.pagination().find("li:eq(" + this.currentIndex + ")").removeClass(this.options.currentPaginationClass);
+      this.currentSlideElement().removeClass(this.options.currentClass);
+      this.previousSlideElement().removeClass(this.options.previousClass);
+      this.nextSlideElement().removeClass(this.options.nextClass);
+      return this.currentPaginationElement().removeClass(this.options.currentPaginationClass);
     };
 
     Slider.prototype.playing = function() {

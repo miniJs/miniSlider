@@ -44,17 +44,18 @@ class Slider
       @stopAutoplay()
       return false
 
-  previousLink: ->
-    @$previousLink ||= $('<a />', { html: @options.previousBtnContent, class: @options.previousBtnClass, href: '#' })
+  previousLink: -> @$previousLink ||= $('<a />', { html: @options.previousBtnContent, class: @options.previousBtnClass, href: '#' })
   
-  nextLink: ->
-    @$nextLink ||= $('<a />', { html: @options.nextBtnContent, class: @options.nextBtnClass, href: '#' })
+  nextLink: -> @$nextLink ||= $('<a />', { html: @options.nextBtnContent, class: @options.nextBtnClass, href: '#' })
 
   pagination: ->
     unless @$pagination
       @$pagination = $('<ul />', class: @options.paginationClass)
       @$pagination.append("<li><a href='##{index + 1}'>#{index + 1}</li>") for slide, index in @slides
+
     @$pagination
+
+  currentPaginationElement: -> @pagination().find("li:eq(#{@currentIndex})")
 
   count: -> @slides.length
 
@@ -65,6 +66,12 @@ class Slider
 
     @container.css('width', @size.width * @slides.length)
     @initTracker()
+
+  currentSlideElement: -> @slides[@currentIndex].element
+
+  previousSlideElement: -> @slides[@previousIndex].element
+
+  nextSlideElement: -> @slides[@nextIndex].element
 
   initTracker: -> 
     @currentIndex = 0
@@ -83,20 +90,18 @@ class Slider
     @addCssClasses()    
 
   addCssClasses: ->
-    @slides[@currentIndex].element.addClass @options.currentClass
-    @slides[@previousIndex].element.addClass @options.previousClass
-    @slides[@nextIndex].element.addClass @options.nextClass
+    @currentSlideElement().addClass @options.currentClass
+    @previousSlideElement().addClass @options.previousClass
+    @nextSlideElement().addClass @options.nextClass
 
-    @pagination().find("li:eq(#{@currentIndex})")
-             .addClass(@options.currentPaginationClass)
+    @currentPaginationElement().addClass(@options.currentPaginationClass)
 
   removeCssClasses: ->
-    @slides[@currentIndex].element.removeClass @options.currentClass
-    @slides[@previousIndex].element.removeClass @options.previousClass
-    @slides[@nextIndex].element.removeClass @options.nextClass
+    @currentSlideElement().removeClass @options.currentClass
+    @previousSlideElement().removeClass @options.previousClass
+    @nextSlideElement().removeClass @options.nextClass
 
-    @pagination().find("li:eq(#{@currentIndex})")
-                 .removeClass(@options.currentPaginationClass)
+    @currentPaginationElement().removeClass(@options.currentPaginationClass)
 
   playing: -> @autoplayId?
 
