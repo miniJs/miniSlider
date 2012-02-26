@@ -118,7 +118,6 @@ class Slider
       @autoplayId = null
 
   play: -> 
-    # TODO: handle first delay if specified
     @startAutoPlay()
 
     if @options.pauseOnHover
@@ -134,7 +133,6 @@ class Slider
   previous: -> @to @previousIndex
 
   callAnimationCallbackFunction: (functionName, index) -> @options[functionName](@slideElementForIndex[index],index + 1)
-
 
   to: (index) -> 
     unless @state is 'animating'
@@ -157,7 +155,6 @@ $ ->
     @defaults = {
       # general
       autoPlay:              true                # autoplay slides
-      firstDelay:            5000                # delay before first transition
       delay:                 3000                # delay between slides
       containerClass:        'slider-container'  # slider container class name
             

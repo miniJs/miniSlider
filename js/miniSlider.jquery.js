@@ -231,7 +231,6 @@
       var slider;
       this.defaults = {
         autoPlay: true,
-        firstDelay: 5000,
         delay: 3000,
         containerClass: 'slider-container',
         currentClass: 'current',

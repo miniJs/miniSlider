@@ -25,12 +25,11 @@ Developed by <a href="mailto:matthieu.aussaguel@gmail">Matthieu Aussaguel</a>, <
 
 ### To Do
 ---------
-
-* Finish implementing basic functionnalities
 * JavaScript manual Testing
 * Browser compatibility testing
-* Other transition effects such as fade
+* Other transition effects such as 'fade'
 * Preload image setting
+* Different delay time for very first slide only
 * Make the slider design responsive friendly
 * Add test coverage using jasmine.js
 
