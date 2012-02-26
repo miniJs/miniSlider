@@ -6,11 +6,13 @@
 #
 class Slide
   constructor: (@element, @index, @options) ->
-    @element.css({ position: 'absolute', top: 0, left: @index * @element.width() })
+    @element.css { position: 'absolute', top: 0, left: @index * @element.width() }
 
 class Slider
   constructor: (@container, @options) ->
-    @size = { height: @container.height(), width: @container.width() }
+    @size = 
+      height: @container.height()
+      width: @container.width()
 
     @container.css({ overflow: 'hidden', position: 'absolute', top: 0, left: 0 })
               .wrap("<div class='#{@options.containerClass}' style='position: relative; overflow: hidden;'/>")
@@ -24,10 +26,12 @@ class Slider
             .append(@nextLink())
 
     @nextLink().on 'click', =>
+      @stopAutoplay()
       @next()
       return false
 
     @previousLink().on 'click', =>
+      @stopAutoplay()
       @previous()
       return false
 
@@ -72,12 +76,22 @@ class Slider
   previousSlide: ->
     @slides[@previousIndex]
 
-  play: -> 
-    # TODO: handle first delay if specified
+  playing: -> 
+    @autoplayId?
 
-    animation = setInterval =>
+  startAutoPlay: ->
+    @autoplayId = setInterval =>
       @next()
     , @options.delay
+
+  stopAutoplay: ->
+    if @playing()
+      clearInterval @autoplayId
+      @autoplayId = null
+
+  play: -> 
+    # TODO: handle first delay if specified
+    @startAutoPlay()
 
     if @options.pauseOnHover
       @container.children()
@@ -106,11 +120,11 @@ class Slider
 
   pause: ->
     # TODO: pause the autoplaying and update the state
+    @stopAutoPlay()
 
   resume: ->
     # TODO: resume the autoplaying and update the state
-    
-
+    @startAutoPlay()
 
 $ ->
   $.miniSlider = (element, options) ->
@@ -145,10 +159,10 @@ $ ->
       currentPaginationClass: 'currentPagination' # current pagination list item class
 
       # callbacks
-      onLoad:               ->                # Function(), called when miniSlide is loading
-      onReady:              ->                # Function(), called when miniSlide is ready
-      onTransition:         ->                # Function(element, number), called when the slide is in sliding
-      onComplete:           ->                # Function(slide, number), called when the slide transition is complete      
+      onLoad:               ->                    # Function(), called when miniSlide is loading
+      onReady:              ->                    # Function(), called when miniSlide is ready
+      onTransition:         ->                    # Function(element, number), called when the slide is in sliding
+      onComplete:           ->                    # Function(slide, number), called when the slide transition is complete      
     }
 
     ## private variables
@@ -161,8 +175,6 @@ $ ->
 
     # jQuery version of DOM element attached to the plugin
     @$element = $ element
-
-    ## private methods
 
     ## public methods
 

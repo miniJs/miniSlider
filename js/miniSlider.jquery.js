@@ -43,10 +43,12 @@
       var _this = this;
       this.wrapper.append(this.previousLink()).append(this.nextLink());
       this.nextLink().on('click', function() {
+        _this.stopAutoplay();
         _this.next();
         return false;
       });
       return this.previousLink().on('click', function() {
+        _this.stopAutoplay();
         _this.previous();
         return false;
       });
@@ -121,12 +123,27 @@
       return this.slides[this.previousIndex];
     };
 
-    Slider.prototype.play = function() {
-      var animation,
-        _this = this;
-      animation = setInterval(function() {
+    Slider.prototype.playing = function() {
+      return this.autoplayId != null;
+    };
+
+    Slider.prototype.startAutoPlay = function() {
+      var _this = this;
+      return this.autoplayId = setInterval(function() {
         return _this.next();
       }, this.options.delay);
+    };
+
+    Slider.prototype.stopAutoplay = function() {
+      if (this.playing()) {
+        clearInterval(this.autoplayId);
+        return this.autoplayId = null;
+      }
+    };
+
+    Slider.prototype.play = function() {
+      var _this = this;
+      this.startAutoPlay();
       if (this.options.pauseOnHover) {
         return this.container.children().on('mouseenter', function() {
           return _this.pause();
@@ -150,9 +167,13 @@
 
     Slider.prototype.to = function(number) {};
 
-    Slider.prototype.pause = function() {};
+    Slider.prototype.pause = function() {
+      return this.stopAutoPlay();
+    };
 
-    Slider.prototype.resume = function() {};
+    Slider.prototype.resume = function() {
+      return this.startAutoPlay();
+    };
 
     return Slider;
 
