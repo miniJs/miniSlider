@@ -23,6 +23,7 @@
     function Slider(container, options) {
       this.container = container;
       this.options = options;
+      this.state = 'waiting';
       this.size = {
         height: this.container.height(),
         width: this.container.width()
@@ -35,8 +36,6 @@
       }).wrap("<div class='" + this.options.containerClass + "' style='position: relative; overflow: hidden;'/>");
       this.wrapper = this.container.parent();
       this.initSlides();
-      this.container.css('width', this.size.width * this.slides.length);
-      this.initTracker();
     }
 
     Slider.prototype.appendNavigation = function() {
@@ -57,9 +56,9 @@
     Slider.prototype.appendPagination = function() {
       var _this = this;
       this.wrapper.append(this.pagination());
-      this.pagination().find("li:eq(" + this.currentIndex + ")").addClass(this.options.currentPaginationClass);
       return this.pagination().on('click', 'a', function(e) {
-        _this.to(($(e.currentTarget)).attr('href').replace('#', ''));
+        _this.to(($(e.currentTarget)).attr('href').replace('#', '') - 1);
+        _this.stopAutoplay();
         return false;
       });
     };
@@ -102,19 +101,40 @@
     Slider.prototype.initSlides = function() {
       var _this = this;
       this.slides = [];
-      return this.container.children().each(function(index, element) {
+      this.container.children().each(function(index, element) {
         return _this.slides.push(new Slide($(element), index, _this.options));
       });
+      this.container.css('width', this.size.width * this.slides.length);
+      return this.initTracker();
     };
 
     Slider.prototype.initTracker = function() {
-      return this.updateTracker(0);
+      this.currentIndex = 0;
+      this.previousIndex = this.count() - 1;
+      this.nextIndex = 1;
+      return this.addCssClasses();
     };
 
     Slider.prototype.updateTracker = function(newIndex) {
+      this.removeCssClasses();
       this.currentIndex = newIndex;
       this.previousIndex = newIndex === 0 ? this.count() - 1 : newIndex - 1;
-      return this.nextIndex = newIndex === this.count() - 1 ? 0 : newIndex + 1;
+      this.nextIndex = newIndex === this.count() - 1 ? 0 : newIndex + 1;
+      return this.addCssClasses();
+    };
+
+    Slider.prototype.addCssClasses = function() {
+      this.slides[this.currentIndex].element.addClass(this.options.currentClass);
+      this.slides[this.previousIndex].element.addClass(this.options.previousClass);
+      this.slides[this.nextIndex].element.addClass(this.options.nextClass);
+      return this.pagination().find("li:eq(" + this.currentIndex + ")").addClass(this.options.currentPaginationClass);
+    };
+
+    Slider.prototype.removeCssClasses = function() {
+      this.slides[this.currentIndex].element.removeClass(this.options.currentClass);
+      this.slides[this.previousIndex].element.removeClass(this.options.previousClass);
+      this.slides[this.nextIndex].element.removeClass(this.options.nextClass);
+      return this.pagination().find("li:eq(" + this.currentIndex + ")").removeClass(this.options.currentPaginationClass);
     };
 
     Slider.prototype.playing = function() {
@@ -148,28 +168,25 @@
     };
 
     Slider.prototype.next = function() {
-      var leftPosition,
-        _this = this;
-      leftPosition = this.nextIndex === 0 ? 0 : this.container.position().left - this.size.width;
-      return this.container.animate({
-        left: leftPosition
-      }, this.options.transitionSpeed, this.options.transitionEasing, function() {
-        return _this.updateTracker(_this.nextIndex);
-      });
+      return this.to(this.nextIndex);
     };
 
     Slider.prototype.previous = function() {
-      var leftPosition,
-        _this = this;
-      leftPosition = this.previousIndex === this.count() - 1 ? -(this.container.width() - this.size.width) : this.container.position().left + this.size.width;
-      return this.container.animate({
-        left: leftPosition
-      }, this.options.transitionSpeed, this.options.transitionEasing, function() {
-        return _this.updateTracker(_this.previousIndex);
-      });
+      return this.to(this.previousIndex);
     };
 
-    Slider.prototype.to = function(number) {};
+    Slider.prototype.to = function(index) {
+      var _this = this;
+      if (this.state !== 'animating') {
+        this.state = 'animating';
+        return this.container.animate({
+          left: -(this.size.width * index)
+        }, this.options.transitionSpeed, this.options.transitionEasing, function() {
+          _this.updateTracker(index);
+          return _this.state = 'waiting';
+        });
+      }
+    };
 
     Slider.prototype.pause = function() {
       return this.stopAutoplay();

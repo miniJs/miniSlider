@@ -1,6 +1,6 @@
 #
 # CoffeeScript jQuery Plugin Boilerplate
-# By: Matthieu Aussaguel, http://www.mynameismatthieu.com, @matthieu_tweets
+# By: Matthieu Aussaguel, http://www.mynameismatthieu.com, @mattaussaguel
 # Version: 1.0 alpha 1.0
 # Updated: February 21, 2012
 #
@@ -10,6 +10,8 @@ class Slide
 
 class Slider
   constructor: (@container, @options) ->
+    @state = 'waiting'
+
     @size = 
       height: @container.height()
       width: @container.width()
@@ -19,8 +21,6 @@ class Slider
     @wrapper = @container.parent()
 
     @initSlides()
-    @container.css('width', @size.width * @slides.length)
-    @initTracker()              
               
   appendNavigation: ->
     @wrapper.append(@previousLink())
@@ -39,11 +39,9 @@ class Slider
   appendPagination: ->
     @wrapper.append(@pagination())
 
-    @pagination().find("li:eq(#{@currentIndex})")
-                 .addClass(@options.currentPaginationClass)
-
     @pagination().on 'click', 'a', (e) =>
-      @to ($ e.currentTarget).attr('href').replace('#','')
+      @to (($ e.currentTarget).attr('href').replace('#','') - 1)
+      @stopAutoplay()
       return false
 
   previousLink: ->
@@ -65,15 +63,42 @@ class Slider
     @slides = []
     @container.children().each (index, element) =>  @slides.push(new Slide(($ element), index, @options))  
 
-  initTracker: -> @updateTracker 0
+    @container.css('width', @size.width * @slides.length)
+    @initTracker()
+
+  initTracker: -> 
+    @currentIndex = 0
+    @previousIndex = @count() - 1
+    @nextIndex = 1
+
+    @addCssClasses()    
 
   updateTracker: (newIndex) ->
+    @removeCssClasses()    
+
     @currentIndex  = newIndex
     @previousIndex = if newIndex is 0 then @count() - 1 else newIndex - 1
-    @nextIndex = if newIndex is @count() - 1 then 0 else newIndex + 1
+    @nextIndex     = if newIndex is @count() - 1 then 0 else newIndex + 1
 
-  playing: -> 
-    @autoplayId?
+    @addCssClasses()    
+
+  addCssClasses: ->
+    @slides[@currentIndex].element.addClass @options.currentClass
+    @slides[@previousIndex].element.addClass @options.previousClass
+    @slides[@nextIndex].element.addClass @options.nextClass
+
+    @pagination().find("li:eq(#{@currentIndex})")
+             .addClass(@options.currentPaginationClass)
+
+  removeCssClasses: ->
+    @slides[@currentIndex].element.removeClass @options.currentClass
+    @slides[@previousIndex].element.removeClass @options.previousClass
+    @slides[@nextIndex].element.removeClass @options.nextClass
+
+    @pagination().find("li:eq(#{@currentIndex})")
+                 .removeClass(@options.currentPaginationClass)
+
+  playing: -> @autoplayId?
 
   startAutoPlay: ->
     @autoplayId = setInterval =>
@@ -97,33 +122,22 @@ class Slider
           @resume()
         )
 
-  next: -> 
-    # TODO: update the state while animating and after animation
-    # Call callback method onTransition and onComplete
-    leftPosition = if @nextIndex is 0 then 0 else (@container.position().left - @size.width)
-    @container.animate({ left: leftPosition }, @options.transitionSpeed, @options.transitionEasing, =>
-      @updateTracker @nextIndex
-    )
+  next: -> @to @nextIndex
   
-  previous: -> 
-    # TODO: update the state while animating and after animation
-    # Call callback method onTransition and onComplete
+  previous: -> @to @previousIndex
 
-    leftPosition = if @previousIndex is @count() - 1 then -(@container.width() - @size.width) else (@container.position().left + @size.width)
-    @container.animate({ left: leftPosition }, @options.transitionSpeed, @options.transitionEasing, =>
-      @updateTracker @previousIndex
-    )
+  to: (index) -> 
+    # TODO: Call callback method onTransition and onComplete
+    unless @state is 'animating'
+      @state = 'animating'
+      @container.animate({ left: -(@size.width * index) }, @options.transitionSpeed, @options.transitionEasing, =>
+        @updateTracker index
+        @state = 'waiting'
+      )
 
-  to: (number) -> 
-    # TODO: go to slide #number and update the index
+  pause: -> @stopAutoplay()
 
-  pause: ->
-    # TODO: pause the autoplaying and update the state
-    @stopAutoplay()
-
-  resume: ->
-    # TODO: resume the autoplaying and update the state
-    @startAutoPlay()
+  resume: -> @startAutoPlay()
 
 $ ->
   $.miniSlider = (element, options) ->
@@ -193,7 +207,7 @@ $ ->
 
       slider.appendNavigation() if @getSetting 'showNavigation'
       slider.appendPagination() if @getSetting 'showPagination'
-      # call onReady callback method
+      # TODO: call onReady callback method
       slider.play() if @getSetting 'autoPlay'
 
     # initialise the plugin
