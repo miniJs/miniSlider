@@ -2,7 +2,7 @@
 # CoffeeScript jQuery Plugin Boilerplate
 # By: Matthieu Aussaguel, http://www.mynameismatthieu.com, @mattaussaguel
 # Version: 1.0 alpha 1.0
-# Updated: February 21, 2012
+# Updated: February 26, 2012
 #
 class Slide
   constructor: (@element, @index, @options) ->
@@ -67,11 +67,13 @@ class Slider
     @container.css('width', @size.width * @slides.length)
     @initTracker()
 
-  currentSlideElement: -> @slides[@currentIndex].element
+  currentSlideElement: -> @slideElementForIndex @currentIndex
 
-  previousSlideElement: -> @slides[@previousIndex].element
+  previousSlideElement: -> @slideElementForIndex @previousIndex
 
-  nextSlideElement: -> @slides[@nextIndex].element
+  nextSlideElement: -> @slideElementForIndex @nextIndex
+
+  slideElementForIndex: (index) -> @slides[index].element
 
   initTracker: -> 
     @currentIndex = 0
@@ -131,13 +133,18 @@ class Slider
   
   previous: -> @to @previousIndex
 
+  callAnimationCallbackFunction: (functionName, index) -> @options[functionName](@slideElementForIndex[index],index + 1)
+
+
   to: (index) -> 
-    # TODO: Call callback method onTransition and onComplete
     unless @state is 'animating'
       @state = 'animating'
-      @container.animate({ left: -(@size.width * index) }, @options.transitionSpeed, @options.transitionEasing, =>
+      @callAnimationCallbackFunction 'onTransition', index
+
+      @container.animate({ left: 0 - (@size.width * index) }, @options.transitionSpeed, @options.transitionEasing, =>
         @updateTracker index
         @state = 'waiting'
+        @callAnimationCallbackFunction 'onComplete', index
       )
 
   pause: -> @stopAutoplay()
@@ -177,14 +184,13 @@ $ ->
       currentPaginationClass: 'currentPagination' # current pagination list item class
 
       # callbacks
-      onLoad:               ->                    # Function(), called when miniSlide is loading
-      onReady:              ->                    # Function(), called when miniSlide is ready
-      onTransition:         ->                    # Function(element, number), called when the slide is in sliding
+      onLoad:               ->                    # Function(), called when miniSlider is loading
+      onReady:              ->                    # Function(), called when miniSlider is ready
+      onTransition:         ->                    # Function(slide, number), called when the slide is in sliding
       onComplete:           ->                    # Function(slide, number), called when the slide transition is complete      
     }
 
     ## private variables
-
     slider = {}
 
     ## public variables
@@ -206,13 +212,14 @@ $ ->
 
     # init function
     @init = ->
-      # call onLoad callback method
       @settings = $.extend {}, @defaults, options
-      slider = new Slider(@$element, @settings)
+      @callSettingFunction 'onLoad'
 
+      slider = new Slider(@$element, @settings)
       slider.appendNavigation() if @getSetting 'showNavigation'
       slider.appendPagination() if @getSetting 'showPagination'
-      # TODO: call onReady callback method
+
+      @callSettingFunction 'onReady'
       slider.play() if @getSetting 'autoPlay'
 
     # initialise the plugin

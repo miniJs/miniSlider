@@ -113,15 +113,19 @@
     };
 
     Slider.prototype.currentSlideElement = function() {
-      return this.slides[this.currentIndex].element;
+      return this.slideElementForIndex(this.currentIndex);
     };
 
     Slider.prototype.previousSlideElement = function() {
-      return this.slides[this.previousIndex].element;
+      return this.slideElementForIndex(this.previousIndex);
     };
 
     Slider.prototype.nextSlideElement = function() {
-      return this.slides[this.nextIndex].element;
+      return this.slideElementForIndex(this.nextIndex);
+    };
+
+    Slider.prototype.slideElementForIndex = function(index) {
+      return this.slides[index].element;
     };
 
     Slider.prototype.initTracker = function() {
@@ -191,15 +195,21 @@
       return this.to(this.previousIndex);
     };
 
+    Slider.prototype.callAnimationCallbackFunction = function(functionName, index) {
+      return this.options[functionName](this.slideElementForIndex[index], index + 1);
+    };
+
     Slider.prototype.to = function(index) {
       var _this = this;
       if (this.state !== 'animating') {
         this.state = 'animating';
+        this.callAnimationCallbackFunction('onTransition', index);
         return this.container.animate({
-          left: -(this.size.width * index)
+          left: 0 - (this.size.width * index)
         }, this.options.transitionSpeed, this.options.transitionEasing, function() {
           _this.updateTracker(index);
-          return _this.state = 'waiting';
+          _this.state = 'waiting';
+          return _this.callAnimationCallbackFunction('onComplete', index);
         });
       }
     };
@@ -254,9 +264,11 @@
       };
       this.init = function() {
         this.settings = $.extend({}, this.defaults, options);
+        this.callSettingFunction('onLoad');
         slider = new Slider(this.$element, this.settings);
         if (this.getSetting('showNavigation')) slider.appendNavigation();
         if (this.getSetting('showPagination')) slider.appendPagination();
+        this.callSettingFunction('onReady');
         if (this.getSetting('autoPlay')) return slider.play();
       };
       return this.init();
