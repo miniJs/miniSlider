@@ -17,6 +17,7 @@ class Slider
     @container.css({ overflow: 'hidden', position: 'absolute', top: 0, left: 0 })
               .wrap("<div class='#{@options.containerClass}' style='position: relative; overflow: hidden;'/>")
     @wrapper = @container.parent()
+
     @initSlides()
     @container.css('width', @size.width * @slides.length)
     @initTracker()              
@@ -57,24 +58,19 @@ class Slider
       @$pagination.append("<li><a href='##{index + 1}'>#{index + 1}</li>") for slide, index in @slides
     @$pagination
 
-  itemsCount: ->
-    @slides.length
+  count: -> @slides.length
 
   initSlides: ->
+    # Create array of slide objects
     @slides = []
     @container.children().each (index, element) =>  @slides.push(new Slide(($ element), index, @options))  
 
-  initTracker: ->
-    @currentIndex  = 0
+  initTracker: -> @updateTracker 0
 
-  currentSlide: ->
-    @slides[@currentIndex]
-
-  nextSlide: ->
-    @slides[@nextIndex]
-
-  previousSlide: ->
-    @slides[@previousIndex]
+  updateTracker: (newIndex) ->
+    @currentIndex  = newIndex
+    @previousIndex = if newIndex is 0 then @count() - 1 else newIndex - 1
+    @nextIndex = if newIndex is @count() - 1 then 0 else newIndex + 1
 
   playing: -> 
     @autoplayId?
@@ -95,7 +91,7 @@ class Slider
 
     if @options.pauseOnHover
       @container.children()
-        .on('mouseenter', =>
+        .on('mouseover', =>
           @pause()
         ).on('mouseleave', =>
           @resume()
@@ -103,24 +99,27 @@ class Slider
 
   next: -> 
     # TODO: update the state while animating and after animation
-    # Check wether it's the last slide or not and change the behavior is so
-    # Update the current index
     # Call callback method onTransition and onComplete
-    @container.animate({ left: (@container.position().left - @size.width) }, @options.transitionSpeed, @options.transitionEasing)
+    leftPosition = if @nextIndex is 0 then 0 else (@container.position().left - @size.width)
+    @container.animate({ left: leftPosition }, @options.transitionSpeed, @options.transitionEasing, =>
+      @updateTracker @nextIndex
+    )
   
   previous: -> 
     # TODO: update the state while animating and after animation
-    # Check wether it's the first slide or not and change the behavior is so
-    # Update the current index
     # Call callback method onTransition and onComplete
-    @container.animate({ left: (@container.position().left + @size.width) }, @options.transitionSpeed, @options.transitionEasing)
+
+    leftPosition = if @previousIndex is @count() - 1 then -(@container.width() - @size.width) else (@container.position().left + @size.width)
+    @container.animate({ left: leftPosition }, @options.transitionSpeed, @options.transitionEasing, =>
+      @updateTracker @previousIndex
+    )
 
   to: (number) -> 
     # TODO: go to slide #number and update the index
 
   pause: ->
     # TODO: pause the autoplaying and update the state
-    @stopAutoPlay()
+    @stopAutoplay()
 
   resume: ->
     # TODO: resume the autoplaying and update the state

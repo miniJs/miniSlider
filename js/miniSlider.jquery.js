@@ -95,7 +95,7 @@
       return this.$pagination;
     };
 
-    Slider.prototype.itemsCount = function() {
+    Slider.prototype.count = function() {
       return this.slides.length;
     };
 
@@ -108,19 +108,13 @@
     };
 
     Slider.prototype.initTracker = function() {
-      return this.currentIndex = 0;
+      return this.updateTracker(0);
     };
 
-    Slider.prototype.currentSlide = function() {
-      return this.slides[this.currentIndex];
-    };
-
-    Slider.prototype.nextSlide = function() {
-      return this.slides[this.nextIndex];
-    };
-
-    Slider.prototype.previousSlide = function() {
-      return this.slides[this.previousIndex];
+    Slider.prototype.updateTracker = function(newIndex) {
+      this.currentIndex = newIndex;
+      this.previousIndex = newIndex === 0 ? this.count() - 1 : newIndex - 1;
+      return this.nextIndex = newIndex === this.count() - 1 ? 0 : newIndex + 1;
     };
 
     Slider.prototype.playing = function() {
@@ -145,7 +139,7 @@
       var _this = this;
       this.startAutoPlay();
       if (this.options.pauseOnHover) {
-        return this.container.children().on('mouseenter', function() {
+        return this.container.children().on('mouseover', function() {
           return _this.pause();
         }).on('mouseleave', function() {
           return _this.resume();
@@ -154,21 +148,31 @@
     };
 
     Slider.prototype.next = function() {
+      var leftPosition,
+        _this = this;
+      leftPosition = this.nextIndex === 0 ? 0 : this.container.position().left - this.size.width;
       return this.container.animate({
-        left: this.container.position().left - this.size.width
-      }, this.options.transitionSpeed, this.options.transitionEasing);
+        left: leftPosition
+      }, this.options.transitionSpeed, this.options.transitionEasing, function() {
+        return _this.updateTracker(_this.nextIndex);
+      });
     };
 
     Slider.prototype.previous = function() {
+      var leftPosition,
+        _this = this;
+      leftPosition = this.previousIndex === this.count() - 1 ? -(this.container.width() - this.size.width) : this.container.position().left + this.size.width;
       return this.container.animate({
-        left: this.container.position().left + this.size.width
-      }, this.options.transitionSpeed, this.options.transitionEasing);
+        left: leftPosition
+      }, this.options.transitionSpeed, this.options.transitionEasing, function() {
+        return _this.updateTracker(_this.previousIndex);
+      });
     };
 
     Slider.prototype.to = function(number) {};
 
     Slider.prototype.pause = function() {
-      return this.stopAutoPlay();
+      return this.stopAutoplay();
     };
 
     Slider.prototype.resume = function() {
