@@ -45,7 +45,7 @@
 
     Slider.prototype.appendNavigation = function() {
       var _this = this;
-      this.wrapper.append(this.previousLink()).append(this.nextLink());
+      this.wrapper.after(this.nextLink()).after(this.previousLink());
       this.nextLink().on('click', function() {
         _this.stopAutoplay();
         _this.next();
@@ -60,7 +60,7 @@
 
     Slider.prototype.appendPagination = function() {
       var _this = this;
-      this.wrapper.append(this.pagination());
+      this.wrapper.after(this.pagination());
       return this.pagination().on('click', 'a', function(e) {
         _this.to(($(e.currentTarget)).attr('href').replace('#', '') - 1);
         _this.stopAutoplay();
@@ -270,11 +270,11 @@
         this.settings = $.extend({}, this.defaults, options);
         this.callSettingFunction('onLoad');
         slider = new Slider(this.$element, this.settings);
-        if (this.getSetting('showNavigation')) {
-          slider.appendNavigation();
-        }
         if (this.getSetting('showPagination')) {
           slider.appendPagination();
+        }
+        if (this.getSetting('showNavigation')) {
+          slider.appendNavigation();
         }
         this.callSettingFunction('onReady');
         if (this.getSetting('autoPlay')) {

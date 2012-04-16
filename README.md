@@ -3,10 +3,15 @@ miniSlider jQuery plugin
 
 miniSlider is very basic but powerful slider jQuery plugin written in CoffeeScript and it just Works!
 
+### Version
+---------------
+
+0.3 Beta
+
 ### Website Url
 ---------------
 
-Coming soon.
+http://minijs.com/plugins/7/slider
 
 ### Bug tracker
 ---------------

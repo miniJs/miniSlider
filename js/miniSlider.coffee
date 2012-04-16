@@ -1,8 +1,10 @@
 #
-# CoffeeScript jQuery Plugin Boilerplate
+# miniSlider, a slider plugin for jQuery
+# Instructions: http://minijs.com/plugins/7/slider
 # By: Matthieu Aussaguel, http://www.mynameismatthieu.com, @mattaussaguel
-# Version: 1.0 alpha 1.0
-# Updated: February 26, 2012
+# Version: 0.3 Beta
+# Updated: April 16, 2012
+# More info: http://minijs.com/
 #
 class Slide
   constructor: (@element, @index, @options) ->
@@ -23,8 +25,8 @@ class Slider
     @initSlides()
               
   appendNavigation: ->
-    @wrapper.append(@previousLink())
-            .append(@nextLink())
+    @wrapper.after(@nextLink())
+            .after(@previousLink())
 
     @nextLink().on 'click', =>
       @stopAutoplay()
@@ -37,7 +39,7 @@ class Slider
       return false
 
   appendPagination: ->
-    @wrapper.append(@pagination())
+    @wrapper.after(@pagination())
 
     @pagination().on 'click', 'a', (e) =>
       @to (($ e.currentTarget).attr('href').replace('#','') - 1)
@@ -213,8 +215,8 @@ $ ->
       @callSettingFunction 'onLoad'
 
       slider = new Slider(@$element, @settings)
-      slider.appendNavigation() if @getSetting 'showNavigation'
       slider.appendPagination() if @getSetting 'showPagination'
+      slider.appendNavigation() if @getSetting 'showNavigation'
 
       @callSettingFunction 'onReady'
       slider.play() if @getSetting 'autoPlay'
