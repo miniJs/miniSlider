@@ -31,7 +31,7 @@ h1 strong {
 /* SLIDER */
 
 #main-inner {
-    overflow: hidden;
+    position: relative;
     height: 300px;
     width: 960px;
 }
@@ -93,12 +93,12 @@ h1 strong {
     overflow: hidden;
 }
 
-.slider-container a, .slider-container a:hover, .slider-container a:active {
+a, a:hover, a:visited {
     text-decoration: none;
     color: #fff;
 }
 
-.slider-container .previousBtn, .slider-container .nextBtn {
+.previousBtn, .nextBtn {
     position: absolute;
     top: 120px;
     width: 40px;
@@ -116,20 +116,19 @@ h1 strong {
     filter:alpha(opacity=7);
 }
 
-.slider-container .previousBtn:hover, .slider-container .nextBtn:hover {
+.previousBtn:hover, .nextBtn:hover {
     opacity: 0.9;
     -moz-opacity: 0.9;
     filter:alpha(opacity=9);
 }
 
-.slider-container .previousBtn {
+.previousBtn {
     left: 10px;
 }
 
-.slider-container .nextBtn {
+.nextBtn {
     right: 10px;
 }
-
 
 /* PAGiNATION */
 .pagination {
@@ -151,7 +150,7 @@ h1 strong {
     width: 10px;
     height: 10px;
     border-radius: 23px;
-    background: #222;
+    background: #fff;
     text-indent: -9999px;
     display: block;
     opacity: 0.5;
@@ -160,7 +159,7 @@ h1 strong {
 }
 
 .pagination li.currentPagination a, .pagination li a:hover {
-      opacity: 0.9;
-    -moz-opacity: 0.9;
-    filter:alpha(opacity=9);
+  opacity: 0.9;
+  -moz-opacity: 0.9;
+  filter:alpha(opacity=9);
 }
