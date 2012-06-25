@@ -23,7 +23,7 @@ https://github.com/miniJs/miniSlider/issues
 ### Developer
 -------------
 
-Developed by <a href="mailto:matthieu.aussaguel@gmail">Matthieu Aussaguel</a>, <a href="http://mynameismatthieu.com">mynameismatthieu.com</a>
+Developed by <a href="mailto:matthieu.aussaguel@gmail.com">Matthieu Aussaguel</a>, <a href="http://mynameismatthieu.com">mynameismatthieu.com</a>
 
 + http://twitter.com/mattaussaguel
 + http://github.com/matthieua
