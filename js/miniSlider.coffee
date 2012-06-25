@@ -224,6 +224,8 @@ $ ->
     # initialise the plugin
     @init()
 
+    this
+
   $.fn.miniSlider = (options) ->
     return this.each ->
       if undefined == $(this).data 'miniSlider'

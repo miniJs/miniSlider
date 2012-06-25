@@ -1,35 +1,30 @@
-miniSlider jQuery plugin
-=======================
+# [miniSlider jQuery plugin](http://minijs.com/plugins/7/slider) [![Build Status](https://secure.travisci.org/miniJs/miniSlider.png?branch=master)](http://travisci.org/matthieua/miniSlider)
 
 miniSlider is very basic but powerful slider jQuery plugin written in CoffeeScript and it just Works!
 
-### Version
----------------
+## Version
 
 0.3 Beta
 
-### Website Url
----------------
+## Website Url
 
 http://minijs.com/plugins/7/slider
 
-### Bug tracker
----------------
+## Bug tracker
 
 If you find a bug, please raise it the issue here on Github! 
 
 https://github.com/miniJs/miniSlider/issues
 
-### Developer
--------------
+## Developer
 
 Developed by <a href="mailto:matthieu.aussaguel@gmail.com">Matthieu Aussaguel</a>, <a href="http://mynameismatthieu.com">mynameismatthieu.com</a>
 
 + http://twitter.com/mattaussaguel
 + http://github.com/matthieua
 
-### To Do
----------
+## To Do
+
 * JavaScript manual Testing
 * Browser compatibility testing
 * Other transition effects such as 'fade'
@@ -38,8 +33,7 @@ Developed by <a href="mailto:matthieu.aussaguel@gmail.com">Matthieu Aussaguel</a
 * Make the slider design responsive friendly
 * Add test coverage using jasmine.js
 
-### Licence
------------
+## Licence
 
 Copyright &copy; 2012 Matthieu Aussaguel
 
