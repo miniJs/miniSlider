@@ -3,7 +3,6 @@
 # Instructions: http://minijs.com/plugins/7/slider
 # By: Matthieu Aussaguel, http://www.mynameismatthieu.com, @mattaussaguel
 # Version: 0.3 Beta
-# Updated: April 16, 2012
 # More info: http://minijs.com/
 #
 class Slide
@@ -154,7 +153,7 @@ class Slider
 $ ->
   $.miniSlider = (element, options) ->
     # default plugin settings
-    @defaults = {
+    @defaults =
       # general
       autoPlay:              true                # autoplay slides
       delay:                 3000                # delay between slides
@@ -187,7 +186,6 @@ $ ->
       onReady:              ->                    # Function(), called when miniSlider is ready
       onTransition:         ->                    # Function(slide, number), called when the slide is in sliding
       onComplete:           ->                    # Function(slide, number), called when the slide transition is complete      
-    }
 
     ## private variables
     slider = {}
