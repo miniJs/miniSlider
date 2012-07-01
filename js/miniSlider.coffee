@@ -63,7 +63,8 @@ class Slider
   initSlides: ->
     # Create array of slide objects
     @slides = []
-    @container.children().each (index, element) =>  @slides.push(new Slide(($ element), index, @options))  
+    @container.children().each (index, element) => 
+       @slides.push(new Slide(($(element), index, @options))  
 
     @container.css('width', @size.width * @slides.length)
     @initTracker()

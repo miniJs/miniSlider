@@ -7,7 +7,7 @@
     };
     beforeEach(function() {
       loadFixtures('fragment.html');
-      return this.$element = $('#fixtures');
+      return this.$element = $('#slider');
     });
     it('should be available on the jQuery object', function() {
       return expect($.fn.miniSlider).toBeDefined();
@@ -15,12 +15,12 @@
     it('should be chainable', function() {
       return expect(this.$element.miniSlider(options)).toBe(this.$element);
     });
-    it('should offers default values', function() {
+    it('should offer default values', function() {
       var plugin;
       plugin = new $.miniSlider(this.$element[0], options);
       return expect(plugin.defaults).toBeDefined();
     });
-    return it('should overwrites the settings', function() {
+    return it('should overwrite the settings', function() {
       var plugin;
       plugin = new $.miniSlider(this.$element[0], options);
       return expect(plugin.settings.autoPlay).toBeFalsy;
