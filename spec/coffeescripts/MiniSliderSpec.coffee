@@ -1,7 +1,13 @@
 describe 'miniSlider', ->
+  sliderFixture = '<div id="slider">
+                    <p>some text</p>
+                    <p>some text</p>
+                    <p>some text</p>
+                    <p>some text</p>
+                  </div>'
 
   beforeEach ->
-    loadFixtures 'fragment.html'
+    setFixtures sliderFixture
     @$element = $('#slider')
 
   describe 'plugin behaviour', ->
@@ -293,12 +299,47 @@ describe 'miniSlider', ->
 
     describe 'callbacks', ->
       beforeEach ->
-        @callback = jasmine.createSpy 'callback'
+        @callback = sinon.spy()
+        @clock    = sinon.useFakeTimers()
 
-      # onLoad
-      # onReady
-      # onTransition
-      # onComplete
+      afterEach ->
+        @callback.reset()
+        @clock.restore()  
+
+      it 'should call onLoad callback when slider is initializing', ->
+        new $.miniSlider( @$element, { onLoad: @callback } )
+
+        expect( @callback.calledWith() ).toBeTruthy()
+
+      it 'should call onReady callback when slider is initializing', ->
+        anotherCallback = sinon.spy()
+        new $.miniSlider( @$element, { onLoad: @callback, onReady: anotherCallback } )
+
+        expect( anotherCallback.calledWith() ).toBeTruthy()
+        expect( anotherCallback.calledAfter( @callback ) ).toBeTruthy()
+
+      it 'should call onTransition when are slides animating', ->
+        plugin = new $.miniSlider( @$element, { onTransition: @callback, autoPlay: false, transitionSpeed: 0 } )          
+
+        expect( @callback.called ).toBeFalsy()
+
+        for index in [1..3]
+          plugin.slider.next()
+          expect( @callback.calledWith( plugin.slider.slides[index].element, index + 1 ) ).toBeTruthy()
+
+        plugin.slider.next()
+        expect( @callback.calledWith( plugin.slider.slides[0].element, 1 ) ).toBeTruthy()
+      
+      it 'should call onComplete callback when the animation is complete', ->
+        plugin = new $.miniSlider( @$element, { onComplete: @callback, autoPlay: false } )
+
+        expect( @callback.called ).toBeFalsy()
+        plugin.slider.next()
+        expect( @callback.called ).toBeFalsy()
+        @clock.tick 600
+        expect( @callback.called ).toBeTruthy()
+
+
 
 
 

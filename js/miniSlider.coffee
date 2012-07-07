@@ -134,7 +134,8 @@ class Slider
   
   previous: -> @to @previousIndex
 
-  callAnimationCallbackFunction: (functionName, index) -> @options[functionName](@slideElementForIndex[index],index + 1)
+  callAnimationCallbackFunction: (functionName, index) -> 
+    @options[functionName](@slideElementForIndex(index),index + 1)
 
   to: (index) -> 
     unless @state is 'animating'

@@ -196,7 +196,7 @@
     };
 
     Slider.prototype.callAnimationCallbackFunction = function(functionName, index) {
-      return this.options[functionName](this.slideElementForIndex[index], index + 1);
+      return this.options[functionName](this.slideElementForIndex(index), index + 1);
     };
 
     Slider.prototype.to = function(index) {

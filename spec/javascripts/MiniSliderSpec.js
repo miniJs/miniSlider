@@ -1,8 +1,15 @@
 (function() {
 
   describe('miniSlider', function() {
+    var sliderFixture;
+    sliderFixture = '<div id="slider">\
+                    <p>some text</p>\
+                    <p>some text</p>\
+                    <p>some text</p>\
+                    <p>some text</p>\
+                  </div>';
     beforeEach(function() {
-      loadFixtures('fragment.html');
+      setFixtures(sliderFixture);
       return this.$element = $('#slider');
     });
     return describe('plugin behaviour', function() {
@@ -314,8 +321,56 @@
       });
       describe('navigation', function() {});
       return describe('callbacks', function() {
-        return beforeEach(function() {
-          return this.callback = jasmine.createSpy('callback');
+        beforeEach(function() {
+          this.callback = sinon.spy();
+          return this.clock = sinon.useFakeTimers();
+        });
+        afterEach(function() {
+          this.callback.reset();
+          return this.clock.restore();
+        });
+        it('should call onLoad callback when slider is initializing', function() {
+          new $.miniSlider(this.$element, {
+            onLoad: this.callback
+          });
+          return expect(this.callback.calledWith()).toBeTruthy();
+        });
+        it('should call onReady callback when slider is initializing', function() {
+          var anotherCallback;
+          anotherCallback = sinon.spy();
+          new $.miniSlider(this.$element, {
+            onLoad: this.callback,
+            onReady: anotherCallback
+          });
+          expect(anotherCallback.calledWith()).toBeTruthy();
+          return expect(anotherCallback.calledAfter(this.callback)).toBeTruthy();
+        });
+        it('should call onTransition when are slides animating', function() {
+          var index, plugin, _i;
+          plugin = new $.miniSlider(this.$element, {
+            onTransition: this.callback,
+            autoPlay: false,
+            transitionSpeed: 0
+          });
+          expect(this.callback.called).toBeFalsy();
+          for (index = _i = 1; _i <= 3; index = ++_i) {
+            plugin.slider.next();
+            expect(this.callback.calledWith(plugin.slider.slides[index].element, index + 1)).toBeTruthy();
+          }
+          plugin.slider.next();
+          return expect(this.callback.calledWith(plugin.slider.slides[0].element, 1)).toBeTruthy();
+        });
+        return it('should call onComplete callback when the animation is complete', function() {
+          var plugin;
+          plugin = new $.miniSlider(this.$element, {
+            onComplete: this.callback,
+            autoPlay: false
+          });
+          expect(this.callback.called).toBeFalsy();
+          plugin.slider.next();
+          expect(this.callback.called).toBeFalsy();
+          this.clock.tick(600);
+          return expect(this.callback.called).toBeTruthy();
         });
       });
     });
