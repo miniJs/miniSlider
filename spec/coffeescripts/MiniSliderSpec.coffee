@@ -22,3 +22,40 @@ describe 'miniSlider', ->
       expect( plugin.settings.autoPlay ).toBeFalsy()
       expect( plugin.settings.delay ).toBe 500
 
+    describe 'initialization', ->
+      # containerClass
+      # currentClass
+      # previousClass
+      # nextClass
+
+
+    describe 'animation', ->
+      # delay
+      # authoplay
+      # transitionSpeed
+      # transitionEasing
+
+    describe 'navigation', ->
+      # puseOnHover
+      # showNavigation
+      # previousBtnClass
+      # nextBtnClass
+      # previousBtnContent
+      # nextBtnContent
+      # showPagination
+      # paginationClass
+      # currentPaginationClass
+
+    describe 'callbacks', ->
+      beforeEach ->
+        @callback = jasmine.createSpy 'callback'
+
+      # onLoad
+      # onReady
+      # onTransition
+      # onComplete
+
+
+
+      
+

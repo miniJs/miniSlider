@@ -17,7 +17,7 @@
         plugin = new $.miniSlider(this.$element);
         return expect(plugin.defaults).toBeDefined();
       });
-      return it('should overwrite the settings', function() {
+      it('should overwrite the settings', function() {
         var plugin;
         plugin = new $.miniSlider(this.$element, {
           autoPlay: false,
@@ -25,6 +25,14 @@
         });
         expect(plugin.settings.autoPlay).toBeFalsy();
         return expect(plugin.settings.delay).toBe(500);
+      });
+      describe('initialization', function() {});
+      describe('animation', function() {});
+      describe('navigation', function() {});
+      return describe('callbacks', function() {
+        return beforeEach(function() {
+          return this.callback = jasmine.createSpy('callback');
+        });
       });
     });
   });
