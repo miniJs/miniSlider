@@ -42,13 +42,11 @@ Developed by <a href="mailto:matthieu.aussaguel@gmail.com">Matthieu Aussaguel</a
 
 ## To Do
 
-* JavaScript manual Testing
 * Browser compatibility testing
+* Make the slider design responsive friendly
 * Other transition effects such as 'fade'
 * Preload image setting
-* Different delay time for very first slide only
-* Make the slider design responsive friendly
-* Add test coverage using jasmine.js
+* Allow the option to have a different delay on the very first slide
 
 ## Licence
 
