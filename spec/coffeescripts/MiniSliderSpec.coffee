@@ -1,22 +1,24 @@
 describe 'miniSlider', ->
-  options =
-    autoPlay: false
 
   beforeEach ->
     loadFixtures 'fragment.html'
     @$element = $('#slider')
 
-  it 'should be available on the jQuery object', ->
-    expect($.fn.miniSlider).toBeDefined()
+  describe 'plugin behaviour', ->
+    it 'should be available on the jQuery object', ->
+      expect( $.fn.miniSlider ).toBeDefined()
 
-  it 'should be chainable', ->
-    expect(@$element.miniSlider(options)).toBe(@$element)
+    it 'should be chainable', ->
+      expect( @$element.miniSlider() ).toBe @$element
 
-  it 'should offer default values', ->
-    plugin = new $.miniSlider(@$element[0], options)
+    it 'should offer default values', ->
+      plugin = new $.miniSlider( @$element )
 
-    expect(plugin.defaults).toBeDefined()
+      expect( plugin.defaults ).toBeDefined()
 
-  it 'should overwrite the settings', ->
-    plugin = new $.miniSlider(@$element[0], options)
-    expect(plugin.settings.autoPlay).toBeFalsy
+    it 'should overwrite the settings', ->
+      plugin = new $.miniSlider( @$element, { autoPlay: false, delay: 500 } )
+
+      expect( plugin.settings.autoPlay ).toBeFalsy()
+      expect( plugin.settings.delay ).toBe 500
+
