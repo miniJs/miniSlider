@@ -163,7 +163,7 @@
 
     Slider.prototype.startAutoPlay = function() {
       var _this = this;
-      return this.autoplayId = setInterval(function() {
+      return this.autoplayId = window.setInterval(function() {
         return _this.next();
       }, this.options.delay);
     };
@@ -196,7 +196,7 @@
     };
 
     Slider.prototype.callAnimationCallbackFunction = function(functionName, index) {
-      return this.options[functionName](this.slideElementForIndex[index], index + 1);
+      return this.options[functionName](this.slideElementForIndex(index), index + 1);
     };
 
     Slider.prototype.to = function(index) {
@@ -228,7 +228,6 @@
 
   $(function() {
     $.miniSlider = function(element, options) {
-      var slider;
       this.defaults = {
         autoPlay: true,
         delay: 3000,
@@ -237,24 +236,24 @@
         previousClass: 'previous',
         nextClass: 'next',
         transitionSpeed: 500,
-        transitionEasing: 'swing',
+        transitionEasing: '',
         pauseOnHover: false,
         showNavigation: true,
-        previousBtnClass: 'previousBtn',
-        nextBtnClass: 'nextBtn',
+        previousBtnClass: 'previous-btn',
+        nextBtnClass: 'next-btn',
         previousBtnContent: '&lsaquo;',
         nextBtnContent: '&rsaquo;',
         showPagination: true,
         paginationClass: 'pagination',
-        currentPaginationClass: 'currentPagination',
+        currentPaginationClass: 'current-pagination',
         onLoad: function() {},
         onReady: function() {},
         onTransition: function() {},
         onComplete: function() {}
       };
-      slider = {};
       this.settings = {};
       this.$element = $(element);
+      this.slider = {};
       this.getSetting = function(settingKey) {
         return this.settings[settingKey];
       };
@@ -264,16 +263,16 @@
       this.init = function() {
         this.settings = $.extend({}, this.defaults, options);
         this.callSettingFunction('onLoad');
-        slider = new Slider(this.$element, this.settings);
+        this.slider = new Slider(this.$element, this.settings);
         if (this.getSetting('showPagination')) {
-          slider.appendPagination();
+          this.slider.appendPagination();
         }
         if (this.getSetting('showNavigation')) {
-          slider.appendNavigation();
+          this.slider.appendNavigation();
         }
         this.callSettingFunction('onReady');
         if (this.getSetting('autoPlay')) {
-          return slider.play();
+          return this.slider.play();
         }
       };
       this.init();

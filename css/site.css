@@ -98,7 +98,7 @@ a, a:hover, a:visited {
     color: #fff;
 }
 
-.previousBtn, .nextBtn {
+.previous-btn, .next-btn {
     position: absolute;
     top: 120px;
     width: 40px;
@@ -116,17 +116,17 @@ a, a:hover, a:visited {
     filter:alpha(opacity=7);
 }
 
-.previousBtn:hover, .nextBtn:hover {
+.previous-btn:hover, .next-btn:hover {
     opacity: 0.9;
     -moz-opacity: 0.9;
     filter:alpha(opacity=9);
 }
 
-.previousBtn {
+.previous-btn {
     left: 10px;
 }
 
-.nextBtn {
+.next-btn {
     right: 10px;
 }
 
@@ -158,7 +158,7 @@ a, a:hover, a:visited {
     filter:alpha(opacity=5);
 }
 
-.pagination li.currentPagination a, .pagination li a:hover {
+.pagination li.current-pagination a, .pagination li a:hover {
   opacity: 0.9;
   -moz-opacity: 0.9;
   filter:alpha(opacity=9);

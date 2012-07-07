@@ -64,7 +64,7 @@ class Slider
     # Create array of slide objects
     @slides = []
     @container.children().each (index, element) => 
-       @slides.push(new Slide(($(element), index, @options))  
+       @slides.push(new Slide($(element), index, @options))  
 
     @container.css('width', @size.width * @slides.length)
     @initTracker()
@@ -110,7 +110,7 @@ class Slider
   playing: -> @autoplayId?
 
   startAutoPlay: ->
-    @autoplayId = setInterval =>
+    @autoplayId = window.setInterval =>
       @next()
     , @options.delay
 
@@ -134,7 +134,8 @@ class Slider
   
   previous: -> @to @previousIndex
 
-  callAnimationCallbackFunction: (functionName, index) -> @options[functionName](@slideElementForIndex[index],index + 1)
+  callAnimationCallbackFunction: (functionName, index) -> 
+    @options[functionName](@slideElementForIndex(index),index + 1)
 
   to: (index) -> 
     unless @state is 'animating'
@@ -167,20 +168,20 @@ $ ->
 
       # transition
       transitionSpeed:        500                # transition speed between slides
-      transitionEasing:       'swing'            # easing animation for the slides transition
+      transitionEasing:       ''            # easing animation for the slides transition
 
       # navigation
       pauseOnHover:           false               # pause on mouse over
 
       showNavigation:         true                # show next/previous buttons
-      previousBtnClass:      'previousBtn'        # previous button class
-      nextBtnClass:          'nextBtn'            # next button class
+      previousBtnClass:      'previous-btn'        # previous button class
+      nextBtnClass:          'next-btn'            # next button class
       previousBtnContent:    '&lsaquo;'           # previous button html content
       nextBtnContent:        '&rsaquo;'           # next button html content
 
       showPagination:         true                # show slider pagination
       paginationClass:        'pagination'        # pagination wrapper class
-      currentPaginationClass: 'currentPagination' # current pagination list item class
+      currentPaginationClass: 'current-pagination' # current pagination list item class
 
       # callbacks
       onLoad:               ->                    # Function(), called when miniSlider is loading
@@ -188,8 +189,7 @@ $ ->
       onTransition:         ->                    # Function(slide, number), called when the slide is in sliding
       onComplete:           ->                    # Function(slide, number), called when the slide transition is complete      
 
-    ## private variables
-    slider = {}
+    
 
     ## public variables
     # plugin settings
@@ -197,6 +197,9 @@ $ ->
 
     # jQuery version of DOM element attached to the plugin
     @$element = $ element
+
+    # slider object
+    @slider = {}
 
     ## public methods
 
@@ -213,12 +216,12 @@ $ ->
       @settings = $.extend {}, @defaults, options
       @callSettingFunction 'onLoad'
 
-      slider = new Slider(@$element, @settings)
-      slider.appendPagination() if @getSetting 'showPagination'
-      slider.appendNavigation() if @getSetting 'showNavigation'
+      @slider = new Slider(@$element, @settings)
+      @slider.appendPagination() if @getSetting 'showPagination'
+      @slider.appendNavigation() if @getSetting 'showNavigation'
 
       @callSettingFunction 'onReady'
-      slider.play() if @getSetting 'autoPlay'
+      @slider.play() if @getSetting 'autoPlay'
 
     # initialise the plugin
     @init()
