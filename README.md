@@ -4,7 +4,7 @@ miniSlider is very basic but powerful slider jQuery plugin written in CoffeeScri
 
 ## Version
 
-0.3 Beta
+1.0 Stable
 
 ## Website Url
 
