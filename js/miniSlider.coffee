@@ -2,7 +2,7 @@
 # miniSlider, a slider plugin for jQuery
 # Instructions: http://minijs.com/plugins/7/slider
 # By: Matthieu Aussaguel, http://www.mynameismatthieu.com, @mattaussaguel
-# Version: 0.3 Beta
+# Version: 1.0 Stable
 # More info: http://minijs.com/
 #
 class Slide
