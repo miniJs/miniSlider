@@ -64,7 +64,7 @@ class Slider
     # Create array of slide objects
     @slides = []
     @container.children().each (index, element) => 
-       @slides.push(new Slide(($(element), index, @options))  
+       @slides.push(new Slide($(element), index, @options))  
 
     @container.css('width', @size.width * @slides.length)
     @initTracker()
@@ -173,14 +173,14 @@ $ ->
       pauseOnHover:           false               # pause on mouse over
 
       showNavigation:         true                # show next/previous buttons
-      previousBtnClass:      'previousBtn'        # previous button class
-      nextBtnClass:          'nextBtn'            # next button class
+      previousBtnClass:      'previous-btn'        # previous button class
+      nextBtnClass:          'next-btn'            # next button class
       previousBtnContent:    '&lsaquo;'           # previous button html content
       nextBtnContent:        '&rsaquo;'           # next button html content
 
       showPagination:         true                # show slider pagination
       paginationClass:        'pagination'        # pagination wrapper class
-      currentPaginationClass: 'currentPagination' # current pagination list item class
+      currentPaginationClass: 'current-pagination' # current pagination list item class
 
       # callbacks
       onLoad:               ->                    # Function(), called when miniSlider is loading
