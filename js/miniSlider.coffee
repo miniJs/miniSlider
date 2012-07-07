@@ -41,7 +41,7 @@ class Slider
     @wrapper.after(@pagination())
 
     @pagination().on 'click', 'a', (e) =>
-      @to (($ e.currentTarget).attr('href').replace('#','') - 1)
+      @to (($ e.currentTarget).data().index - 1 )
       @stopAutoplay()
       return false
 
@@ -52,7 +52,7 @@ class Slider
   pagination: ->
     unless @$pagination
       @$pagination = $('<ul />', class: @options.paginationClass)
-      @$pagination.append("<li><a href='##{index + 1}'>#{index + 1}</li>") for slide, index in @slides
+      @$pagination.append("<li><a href='#' data-index='#{index + 1}'>#{index + 1}</a></li>") for slide, index in @slides
 
     @$pagination
 

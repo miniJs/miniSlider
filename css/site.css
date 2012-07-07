@@ -41,47 +41,12 @@ h1 strong {
     width: 960px;
 }
 
-#slider figure {
+#slider img {
     height: 298px;
     width: 960px;
     margin: 0;
     position: relative;
 }
-
-#slider img {
-    left: 0;
-    top: 0;
-}
-
-#slider figcaption {
-    position: absolute;
-    bottom: 0;
-    width: 938px;
-    padding-left: 20px;
-    color: #D5D5D5;
-    margin: 0;
-    border-top: 1px solid #979797;
-    border-bottom: 0;
-    background: #222;
-    opacity: 0.9;
-    font-weight: 100;
-    -moz-opacity: 0.9;
-    filter:alpha(opacity=9);
-}
-
-#slider figcaption h2 {
-    font-size: 12px;
-    line-height: 12px;
-    letter-spacing: 2px;
-    font-weight: 100;
-    text-transform: uppercase;
-    color: gray;
-}
-
-#slider figcaption p {
-    font-size: 13px;
-}
-
 
 
 /* SLIDER CONTAINER */
@@ -100,7 +65,7 @@ a, a:hover, a:visited {
 
 .previous-btn, .next-btn {
     position: absolute;
-    top: 120px;
+    top: 130px;
     width: 40px;
     height: 40px;
     font-size: 60px;
@@ -113,13 +78,13 @@ a, a:hover, a:visited {
     border-radius: 23px;
     opacity: 0.7;
     -moz-opacity: 0.7;
-    filter:alpha(opacity=7);
+    filter:alpha(opacity=70);
 }
 
 .previous-btn:hover, .next-btn:hover {
     opacity: 0.9;
     -moz-opacity: 0.9;
-    filter:alpha(opacity=9);
+    filter:alpha(opacity=90);
 }
 
 .previous-btn {
@@ -137,29 +102,33 @@ a, a:hover, a:visited {
     margin: 0;
     padding: 0;
     right: 6px;
-
 }
 
 .pagination li {
     list-style: none;
     float: left;
     margin: 0 5px;
+    width: 10px;
+    height: 10px;
+    position: relative;
 }
 
 .pagination li a {
+    position: absolute;
     width: 10px;
     height: 10px;
     border-radius: 23px;
     background: #fff;
     text-indent: -9999px;
+    color: red;
     display: block;
     opacity: 0.5;
     -moz-opacity: 0.5;
-    filter:alpha(opacity=5);
+    filter:alpha(opacity=50);
 }
 
 .pagination li.current-pagination a, .pagination li a:hover {
   opacity: 0.9;
   -moz-opacity: 0.9;
-  filter:alpha(opacity=9);
+  filter:alpha(opacity=90);
 }

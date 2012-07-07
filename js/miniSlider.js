@@ -57,7 +57,7 @@
       var _this = this;
       this.wrapper.after(this.pagination());
       return this.pagination().on('click', 'a', function(e) {
-        _this.to(($(e.currentTarget)).attr('href').replace('#', '') - 1);
+        _this.to(($(e.currentTarget)).data().index - 1);
         _this.stopAutoplay();
         return false;
       });
@@ -88,7 +88,7 @@
         _ref = this.slides;
         for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
           slide = _ref[index];
-          this.$pagination.append("<li><a href='#" + (index + 1) + "'>" + (index + 1) + "</li>");
+          this.$pagination.append("<li><a href='#' data-index='" + (index + 1) + "'>" + (index + 1) + "</a></li>");
         }
       }
       return this.$pagination;
