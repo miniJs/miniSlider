@@ -110,7 +110,7 @@ class Slider
   playing: -> @autoplayId?
 
   startAutoPlay: ->
-    @autoplayId = setInterval =>
+    @autoplayId = window.setInterval =>
       @next()
     , @options.delay
 
@@ -167,7 +167,7 @@ $ ->
 
       # transition
       transitionSpeed:        500                # transition speed between slides
-      transitionEasing:       'swing'            # easing animation for the slides transition
+      transitionEasing:       ''            # easing animation for the slides transition
 
       # navigation
       pauseOnHover:           false               # pause on mouse over
@@ -188,8 +188,7 @@ $ ->
       onTransition:         ->                    # Function(slide, number), called when the slide is in sliding
       onComplete:           ->                    # Function(slide, number), called when the slide transition is complete      
 
-    ## private variables
-    slider = {}
+    
 
     ## public variables
     # plugin settings
@@ -197,6 +196,9 @@ $ ->
 
     # jQuery version of DOM element attached to the plugin
     @$element = $ element
+
+    # slider object
+    @slider = {}
 
     ## public methods
 
@@ -213,12 +215,12 @@ $ ->
       @settings = $.extend {}, @defaults, options
       @callSettingFunction 'onLoad'
 
-      slider = new Slider(@$element, @settings)
-      slider.appendPagination() if @getSetting 'showPagination'
-      slider.appendNavigation() if @getSetting 'showNavigation'
+      @slider = new Slider(@$element, @settings)
+      @slider.appendPagination() if @getSetting 'showPagination'
+      @slider.appendNavigation() if @getSetting 'showNavigation'
 
       @callSettingFunction 'onReady'
-      slider.play() if @getSetting 'autoPlay'
+      @slider.play() if @getSetting 'autoPlay'
 
     # initialise the plugin
     @init()

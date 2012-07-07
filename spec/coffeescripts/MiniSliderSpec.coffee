@@ -198,11 +198,91 @@ describe 'miniSlider', ->
             expect( $( 'ul.pagination > li' ).first() ).toHaveClass 'custom-class'
 
     describe 'animation', ->
-      # delay
-      # authoplay
-      # transitionSpeed
-      # transitionEasing
-      # puseOnHover
+      beforeEach ->
+        @clock = sinon.useFakeTimers()
+
+      afterEach ->
+        @clock.restore()  
+
+      describe 'delay', ->
+        it 'should apply a delay of 3000 between slides by default', ->
+          spyOn( window, 'setInterval' )
+          new $.miniSlider( @$element )
+
+          expect( window.setInterval ).toHaveBeenCalledWith( jasmine.any( Function ), 3000 )
+
+        it 'should apply a custom delay between slides when specified', ->
+          spyOn( window, 'setInterval' )
+          new $.miniSlider( @$element, { delay: 5000 } )
+
+          expect( window.setInterval ).toHaveBeenCalledWith( jasmine.any( Function ), 5000 )
+
+      describe 'autoPlay', ->
+        it 'should autoplay the slider on load by default', ->
+          plugin = new $.miniSlider( @$element )
+          spyOn( plugin.slider, 'next' )
+          
+          @clock.tick 3000
+          expect( plugin.slider.next ).toHaveBeenCalled()
+
+        it 'should not autoplay the slider on load when autoPlay is false', ->
+          plugin = new $.miniSlider( @$element, { autoPlay: false } )
+          spyOn( plugin.slider, 'next' )
+          
+          @clock.tick 3000
+          expect( plugin.slider.next ).not.toHaveBeenCalled()
+
+      describe 'transitionSpeed', ->
+        it 'should animate the slides for 500 milliseconds in between each other by default', ->
+          plugin = new $.miniSlider( @$element )
+          spyOn( plugin.slider.container, 'animate' )
+          @clock.tick 3000
+
+          expect( plugin.slider.container.animate ).toHaveBeenCalledWith( jasmine.any( Object ), 500, jasmine.any( String ), jasmine.any( Function ))
+
+        it 'should animate the slides for a custom time when specified', ->
+          plugin = new $.miniSlider( @$element, { transitionSpeed: 1000 } )
+          spyOn( plugin.slider.container, 'animate' )
+          @clock.tick 3000
+
+          expect( plugin.slider.container.animate ).toHaveBeenCalledWith( jasmine.any( Object ), 1000, jasmine.any( String ), jasmine.any( Function ))
+          
+      describe 'transitionEasing', ->
+        it 'should not use any easing equation when animating slides by default', ->
+          plugin = new $.miniSlider( @$element )
+          spyOn( plugin.slider.container, 'animate' )
+          @clock.tick 3000
+
+          expect( plugin.slider.container.animate ).toHaveBeenCalledWith( jasmine.any( Object ), jasmine.any( Number ), '', jasmine.any( Function ))
+
+        it 'should use custom a easing equation when animating slides when specified', ->
+          plugin = new $.miniSlider( @$element, transitionEasing: 'swing' )
+          spyOn( plugin.slider.container, 'animate' )
+          @clock.tick 3000
+
+          expect( plugin.slider.container.animate ).toHaveBeenCalledWith( jasmine.any( Object ), jasmine.any( Number ), 'swing', jasmine.any( Function ))
+
+      describe 'pauseOnHover', ->
+        it 'should not pause the slider when hovering a slide by default', ->
+          plugin = new $.miniSlider( @$element )
+          spyOn( plugin.slider, 'pause' )
+
+          plugin.slider.slides[0].element.trigger( 'mouseover' )
+          expect( plugin.slider.pause ).not.toHaveBeenCalled()
+
+        it 'should pause the slider when hovering a slide iff pauseOnHover is true', ->
+          plugin = new $.miniSlider( @$element, { pauseOnHover: true } )
+          spyOn( plugin.slider, 'pause' )
+
+          plugin.slider.slides[0].element.trigger( 'mouseover' )
+          expect( plugin.slider.pause ).toHaveBeenCalled()
+
+        it 'should resume autoplay when hovering out a slide', ->
+          plugin = new $.miniSlider( @$element, { pauseOnHover: true } )
+          spyOn( plugin.slider, 'resume' )
+
+          plugin.slider.slides[0].element.trigger( 'mouseover' ).trigger( 'mouseleave' )
+          expect( plugin.slider.resume ).toHaveBeenCalled()
 
     describe 'navigation', ->
       # currentClass

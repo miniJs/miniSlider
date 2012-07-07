@@ -163,7 +163,7 @@
 
     Slider.prototype.startAutoPlay = function() {
       var _this = this;
-      return this.autoplayId = setInterval(function() {
+      return this.autoplayId = window.setInterval(function() {
         return _this.next();
       }, this.options.delay);
     };
@@ -228,7 +228,6 @@
 
   $(function() {
     $.miniSlider = function(element, options) {
-      var slider;
       this.defaults = {
         autoPlay: true,
         delay: 3000,
@@ -237,7 +236,7 @@
         previousClass: 'previous',
         nextClass: 'next',
         transitionSpeed: 500,
-        transitionEasing: 'swing',
+        transitionEasing: '',
         pauseOnHover: false,
         showNavigation: true,
         previousBtnClass: 'previous-btn',
@@ -252,9 +251,9 @@
         onTransition: function() {},
         onComplete: function() {}
       };
-      slider = {};
       this.settings = {};
       this.$element = $(element);
+      this.slider = {};
       this.getSetting = function(settingKey) {
         return this.settings[settingKey];
       };
@@ -264,16 +263,16 @@
       this.init = function() {
         this.settings = $.extend({}, this.defaults, options);
         this.callSettingFunction('onLoad');
-        slider = new Slider(this.$element, this.settings);
+        this.slider = new Slider(this.$element, this.settings);
         if (this.getSetting('showPagination')) {
-          slider.appendPagination();
+          this.slider.appendPagination();
         }
         if (this.getSetting('showNavigation')) {
-          slider.appendNavigation();
+          this.slider.appendNavigation();
         }
         this.callSettingFunction('onReady');
         if (this.getSetting('autoPlay')) {
-          return slider.play();
+          return this.slider.play();
         }
       };
       this.init();

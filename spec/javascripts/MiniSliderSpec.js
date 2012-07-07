@@ -209,7 +209,109 @@
           });
         });
       });
-      describe('animation', function() {});
+      describe('animation', function() {
+        beforeEach(function() {
+          return this.clock = sinon.useFakeTimers();
+        });
+        afterEach(function() {
+          return this.clock.restore();
+        });
+        describe('delay', function() {
+          it('should apply a delay of 3000 between slides by default', function() {
+            spyOn(window, 'setInterval');
+            new $.miniSlider(this.$element);
+            return expect(window.setInterval).toHaveBeenCalledWith(jasmine.any(Function), 3000);
+          });
+          return it('should apply a custom delay between slides when specified', function() {
+            spyOn(window, 'setInterval');
+            new $.miniSlider(this.$element, {
+              delay: 5000
+            });
+            return expect(window.setInterval).toHaveBeenCalledWith(jasmine.any(Function), 5000);
+          });
+        });
+        describe('autoPlay', function() {
+          it('should autoplay the slider on load by default', function() {
+            var plugin;
+            plugin = new $.miniSlider(this.$element);
+            spyOn(plugin.slider, 'next');
+            this.clock.tick(3000);
+            return expect(plugin.slider.next).toHaveBeenCalled();
+          });
+          return it('should not autoplay the slider on load when autoPlay is false', function() {
+            var plugin;
+            plugin = new $.miniSlider(this.$element, {
+              autoPlay: false
+            });
+            spyOn(plugin.slider, 'next');
+            this.clock.tick(3000);
+            return expect(plugin.slider.next).not.toHaveBeenCalled();
+          });
+        });
+        describe('transitionSpeed', function() {
+          it('should animate the slides for 500 milliseconds in between each other by default', function() {
+            var plugin;
+            plugin = new $.miniSlider(this.$element);
+            spyOn(plugin.slider.container, 'animate');
+            this.clock.tick(3000);
+            return expect(plugin.slider.container.animate).toHaveBeenCalledWith(jasmine.any(Object), 500, jasmine.any(String), jasmine.any(Function));
+          });
+          return it('should animate the slides for a custom time when specified', function() {
+            var plugin;
+            plugin = new $.miniSlider(this.$element, {
+              transitionSpeed: 1000
+            });
+            spyOn(plugin.slider.container, 'animate');
+            this.clock.tick(3000);
+            return expect(plugin.slider.container.animate).toHaveBeenCalledWith(jasmine.any(Object), 1000, jasmine.any(String), jasmine.any(Function));
+          });
+        });
+        describe('transitionEasing', function() {
+          it('should not use any easing equation when animating slides by default', function() {
+            var plugin;
+            plugin = new $.miniSlider(this.$element);
+            spyOn(plugin.slider.container, 'animate');
+            this.clock.tick(3000);
+            return expect(plugin.slider.container.animate).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(Number), '', jasmine.any(Function));
+          });
+          return it('should use custom a easing equation when animating slides when specified', function() {
+            var plugin;
+            plugin = new $.miniSlider(this.$element, {
+              transitionEasing: 'swing'
+            });
+            spyOn(plugin.slider.container, 'animate');
+            this.clock.tick(3000);
+            return expect(plugin.slider.container.animate).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(Number), 'swing', jasmine.any(Function));
+          });
+        });
+        return describe('pauseOnHover', function() {
+          it('should not pause the slider when hovering a slide by default', function() {
+            var plugin;
+            plugin = new $.miniSlider(this.$element);
+            spyOn(plugin.slider, 'pause');
+            plugin.slider.slides[0].element.trigger('mouseover');
+            return expect(plugin.slider.pause).not.toHaveBeenCalled();
+          });
+          it('should pause the slider when hovering a slide iff pauseOnHover is true', function() {
+            var plugin;
+            plugin = new $.miniSlider(this.$element, {
+              pauseOnHover: true
+            });
+            spyOn(plugin.slider, 'pause');
+            plugin.slider.slides[0].element.trigger('mouseover');
+            return expect(plugin.slider.pause).toHaveBeenCalled();
+          });
+          return it('should resume autoplay when hovering out a slide', function() {
+            var plugin;
+            plugin = new $.miniSlider(this.$element, {
+              pauseOnHover: true
+            });
+            spyOn(plugin.slider, 'resume');
+            plugin.slider.slides[0].element.trigger('mouseover').trigger('mouseleave');
+            return expect(plugin.slider.resume).toHaveBeenCalled();
+          });
+        });
+      });
       describe('navigation', function() {});
       return describe('callbacks', function() {
         return beforeEach(function() {
