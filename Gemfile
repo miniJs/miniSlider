@@ -9,4 +9,5 @@ group :development do
   gem 'guard-coffeescript'
   gem 'guard-jasmine-headless-webkit'
   gem 'rb-fsevent'
+  gem 'growl'
 end
