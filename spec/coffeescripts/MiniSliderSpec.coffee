@@ -276,7 +276,7 @@ describe 'miniSlider', ->
         plugin.slider.slides[0].element.trigger( 'mouseover' )
         expect( plugin.slider.pause ).not.toHaveBeenCalled()
 
-      it 'should pause the slider when hovering a slide iff pauseOnHover is true', ->
+      it 'should pause the slider when hovering a slide if pauseOnHover is true', ->
         plugin = new $.miniSlider( @$element, { pauseOnHover: true } )
         spyOn( plugin.slider, 'pause' )
 

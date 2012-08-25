@@ -300,7 +300,7 @@
           plugin.slider.slides[0].element.trigger('mouseover');
           return expect(plugin.slider.pause).not.toHaveBeenCalled();
         });
-        it('should pause the slider when hovering a slide iff pauseOnHover is true', function() {
+        it('should pause the slider when hovering a slide if pauseOnHover is true', function() {
           var plugin;
           plugin = new $.miniSlider(this.$element, {
             pauseOnHover: true
