@@ -1,4 +1,4 @@
-# [miniSlider jQuery plugin](http://minijs.com/plugins/7/slider) [![Build Status](https://secure.travis-ci.org/miniJs/miniSlider.png?branch=master)](http://travisci.org/matthieua/miniSlider)
+# [miniSlider jQuery plugin](http://minijs.com/plugins/7/slider) [![Build Status](https://secure.travis-ci.org/miniJs/miniSlider.png?branch=master)](http://travisci.org/minijs/miniSlider)
 
 miniSlider is very basic but powerful slider jQuery plugin written in CoffeeScript and it just Works!
 
