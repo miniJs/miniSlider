@@ -1,5 +1,2 @@
-(function() {
 
-  beforeEach(function() {});
-
-}).call(this);
+beforeEach(function() {});
