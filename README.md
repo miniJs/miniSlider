@@ -30,7 +30,6 @@ Developed by <a href="mailto:matthieu.aussaguel@gmail.com">Matthieu Aussaguel</a
 
 ## To Do
 
-* Browser compatibility testing
 * Make the slider design responsive friendly
 * Other transition effects such as 'fade'
 * Preload image setting
