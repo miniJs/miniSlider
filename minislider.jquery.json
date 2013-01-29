@@ -1,0 +1,24 @@
+{
+  "name"        : "minislider",
+  "version": "1.0.0",
+  "title": "MiniSlider",
+  "description": "Simple Slider jQuery plugin with options allowing you to customize it just like you want.",
+  "keywords": ["jquery", "plugins", "javascript", "utilites", "coffeescript", "demo", "slider", "twitter", "feed", "tooltip", "notification", "counter", "boilerplate"],
+
+  "homepage": "http://minijs.com/plugins/7/slider",
+  "docs": "http://minijs.com/plugins/7/slider",
+  "download": "https://github.com/miniJs/miniBoilerplate/zipball/master",
+  "author" : {
+    "name"  : "Matthieu Aussaguel",
+    "url"   : "http://mynameismatthieu.com/"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url" : "http://matthieuaussaguel.mit-license.org/"
+    }
+  ],
+  "dependencies" : {
+    "jquery" : ">= 1.8.0"
+  }
+}
